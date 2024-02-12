@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "color": "Coral",
+        "hexadecimal": "#faafa8"
+    },
+    {
+        "id": 2,
+        "color": "Melocotón",
+        "hexadecimal": "#f39f76"
+    },
+    {
+        "id": 3,
+        "color": "Arena",
+        "hexadecimal": "#fff8b8"
+    },
+    {
+        "id": 4,
+        "color": "Menta",
+        "hexadecimal": "#e2f6d3"
+    },
+    {
+        "id": 5,
+        "color": "Verde salvia",
+        "hexadecimal": "#b4ddd3"
+    },
+    {
+        "id": 6,
+        "color": "Gris niebla",
+        "hexadecimal": "#d4e4ed"
+    },
+    {
+        "id": 7,
+        "color": "Azul oscuro",
+        "hexadecimal": "#aeccdc"
+    },
+    {
+        "id": 8,
+        "color": "Azul purpúreo",
+        "hexadecimal": "#d3bfdb"
+    },
+    {
+        "id": 9,
+        "color": "Salmón",
+        "hexadecimal": "#f6e2dd"
+    }
+]
