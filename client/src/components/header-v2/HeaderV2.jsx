@@ -93,8 +93,8 @@ function HeaderV2() {
                                 </li>
                             </ul>
                         </div>
-                        <div className={`fixed w-screen h-screen top-0 bottom-0 left-0 right-0 z-[100] bg-[#00000070] overflow-hidden transition-opacity duration-100 ${confirmLogout ? 'opacity-100 visible' : 'opacity-0 invisible'}`}></div>
-                        <section className={`fixed flex justify-center items-center w-full h-full left-0 right-0 bottom-0 top-0 z-[101] transition-opacity duration-100 ${confirmLogout ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                        <div className={`fixed w-screen h-screen top-0 bottom-0 left-0 right-0 z-[9999] bg-[#00000070] overflow-hidden transition-opacity duration-100 ${confirmLogout ? 'opacity-100 visible' : 'opacity-0 invisible'}`}></div>
+                        <section className={`fixed flex justify-center items-center w-full h-full left-0 right-0 bottom-0 top-0 z-[9999] transition-opacity duration-100 ${confirmLogout ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
                             <div className='h-auto w-[345px] bg-[#202520] rounded p-[24px] close-shadow'>
                                 <header className='mb-[1em]'>
                                     <h2 className='text-[18px] font-bold text-center cursor-default'>Cierre de sesión</h2>

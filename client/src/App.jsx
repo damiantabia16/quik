@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { BoardProvider } from './context/BoardContext';
+import { NoteProvider } from './context/NoteContext';
 import { MenuProvider } from './context/MenuContext';
 
 function App() {
@@ -16,19 +17,21 @@ function App() {
     <AuthProvider>
       <BoardProvider>
         <MenuProvider>
-          <Router>
-            <Routes>
-              <Route path='/' index element={<Home />} />
-              <Route path='/ingresar' element={<Login />} />
-              <Route path='/registrarse' element={<Register />} />
-              <Route element={<ProtectedRoute />}>
-                <Route path='/tableros' element={<Boards />} />
-                <Route path='/crear-tablero' element={<CreateBoard />} />
-                <Route path='/tableros/:id' element={<Board />} />
-                <Route path='/perfil' element={<Profile />} />
-              </Route>
-            </Routes>
-          </Router>
+          <NoteProvider>
+            <Router>
+              <Routes>
+                <Route path='/' index element={<Home />} />
+                <Route path='/ingresar' element={<Login />} />
+                <Route path='/registrarse' element={<Register />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path='/tableros' element={<Boards />} />
+                  <Route path='/crear-tablero' element={<CreateBoard />} />
+                  <Route path='/tableros/:id' element={<Board />} />
+                  <Route path='/perfil' element={<Profile />} />
+                </Route>
+              </Routes>
+            </Router>
+          </NoteProvider>
         </MenuProvider>
       </BoardProvider>
     </AuthProvider>

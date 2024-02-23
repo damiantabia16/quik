@@ -7,6 +7,7 @@ export const BoardProvider = ({ children }) => {
 
     const [ board, setBoard ] = useState(null);
     const [ boards, setBoards ] = useState([]);
+    const [ isMounted, setIsMounted ] = useState(false);
     const [ form, setForm ] = useState(false);
     const [ backgroundImages, setBackgroundImages ] = useState([]);
     const [ backgroundImageIndex, setBackgroundImageIndex ] = useState(0);
@@ -36,11 +37,10 @@ export const BoardProvider = ({ children }) => {
     };
 
     const toggleForm = () => {
-        setForm(!form)
+        setIsMounted(!isMounted);
     };
 
     const cancelForm = () => {
-        setForm(false);
         setSelectedBackground(backgroundImages.length > 0 ? backgroundImages[0] : null);
         setBackgroundImageIndex(0);
         setBackgroundColorIndex();
@@ -68,6 +68,8 @@ export const BoardProvider = ({ children }) => {
         createBoard,
         getBoards,
         getBoard,
+        isMounted,
+        setIsMounted,
         form,
         setForm,
         toggleForm,
@@ -79,7 +81,6 @@ export const BoardProvider = ({ children }) => {
         setBackgroundImageIndex,
         backgroundColorIndex,
         setBackgroundColorIndex,
-        cancelForm,
         selectedBackground,
         setSelectedBackground,
     };

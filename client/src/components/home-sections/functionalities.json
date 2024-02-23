@@ -1,0 +1,56 @@
+[
+    {
+        "id": 1,
+        "title": "Crea tu espacio de trabajo.",
+        "function": "Simplemente haz click el botón que dice Crear tablero. Asignale un nombre y una imágen o color de fondo si así lo deseas.",
+        "color": "#404540",
+        "alt": "Quik - Create Board",
+        "url": "https://i.ibb.co/jyXrgm6/quik-functionalities1.png",
+        "urlSmall": "https://i.ibb.co/JycVmrH/functionalities1.png"
+    },
+    {
+        "id": 2,
+        "title": "Empieza a plasmar tus ideas.",
+        "function": "Dentro del tablero, tendrás un botón que dice '+'. Al interactuar con este podrás crear tu nota, ¡la cuál también puedes personalizar!",
+        "color": "#98ff98",
+        "alt": "Quik - Add Note",
+        "url": "https://i.ibb.co/30CZ0zx/quik-functionalities2.png",
+        "urlSmall": "https://i.ibb.co/472qZnx/functionalities2.png"
+    },
+    {
+        "id": 3,
+        "title": "No te olvides de nada.",
+        "function": "A cada una de tus notas podrás añadirle un recordatorio para que estés al tanto de tus actividades y no se te escape ni un detalle.",
+        "color": "#2684ff",
+        "alt": "Quik - Add Reminder",
+        "url": "https://i.ibb.co/FBPjgp7/quik-functionalities3.png",
+        "urlSmall": "https://i.ibb.co/59JBKrQ/functionalities3.png"
+    },
+    {
+        "id": 4,
+        "title": "Un error lo comete cualquiera.",
+        "function": "¿Añadiste una nota en un tablero que no querías? No hay problema, puedes arrastrarla e insertarla en el tablero al que debía pertenecer en un principio.",
+        "color": "#ffc400",
+        "alt": "Quik - Drag Note",
+        "url": "https://i.ibb.co/S6015P5/quik-functionalities4.png",
+        "urlSmall": "https://i.ibb.co/ZKrmn2v/functionalities4.png"
+    },
+    {
+        "id": 5,
+        "title": "¿¡Batman!?",
+        "function": "¿Quieres mantener oculta la identidad de tu nota? Presiona sobre el ícono de la caja de archivos al crear o editar tu nota y verás cómo desaparece en las sombras. Será visible unicamente en la sección de Archivos.",
+        "color": "#202520",
+        "alt": "Quik - Archive Note",
+        "url": "https://i.ibb.co/0FnfR7M/quik-functionalities5.png",
+        "urlSmall": "https://i.ibb.co/8dKz4vZ/functionalities5.png"
+    },
+    {
+        "id": 6,
+        "title": "Gracias por todo.",
+        "function": "Puedes borrar tu nota luego de que ya no te sea más útil y enviarla a la papelera. Tranquilo, si la haz eliminado sin querer está se mantendrá en la sección de Papelera durante 7 días, ¡todo tiene solución en Quik!",
+        "color": "#ff7452",
+        "alt": "Quik - Delete Note",
+        "url": "https://i.ibb.co/zbVPK58/quik-functionalities6.png",
+        "urlSmall": "https://i.ibb.co/KhstPBx/functionalities6.png"
+    }
+]

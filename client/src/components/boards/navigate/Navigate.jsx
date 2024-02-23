@@ -10,7 +10,7 @@ function Navigate() {
     const { menu } = useMenu();
 
     return (
-        <nav className="h-full min-h-full z-[9999]">
+        <nav className="h-full min-h-full z-[9998]">
             <div className={`fixed top-0 left-0 bottom-0 mt-[70px] border-right transition-all ease-in-out duration-100 ${menu ? 'min-w-[280px]' : 'min-w-[70px]'}`}>
                 <div className="flex flex-col h-full min-h-full overflow-auto navigate-blur">
                     <div className="flex-1 overflow-x-hidden overflow-y-auto">
@@ -33,7 +33,7 @@ function Navigate() {
                                                     ? board.background_value
                                                     : 'transparent'
                                             }} />
-                                            <p className={`text-[#eee] text-[14px] text-ellipsis font-medium whitespace-nowrap overflow-hidden ml-[10px] ${menu ? 'block' : 'invisible hidden'}`}>{board.board_name}</p>
+                                            <p className={`text-[#eee] text-[14px] text-ellipsis whitespace-nowrap overflow-hidden ml-[10px] ${menu ? 'block' : 'invisible hidden'}`}>{board.board_name}</p>
                                         </div>
                                     </Link>
                                 ))}

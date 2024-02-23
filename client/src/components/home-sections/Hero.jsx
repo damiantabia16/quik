@@ -7,7 +7,7 @@ function Hero() {
     const { isAuth } = useAuth();
 
   return (
-    <section id="hero" className="md:max-w-[720px] lg:max-w-[1140px] h-screen mx-auto">
+    <section id="hero" className="md:max-w-[720px] lg:max-w-[1140px] mx-auto">
         <div className="px-[20px] w-full mx-auto">
             <div id="items-container" className="flex justify-center items-center flex-wrap mx-[-20px]">
                 <div id="text-container" className="pt-[198px] px-[20px] pb-[20px] lg:w-[50%]">

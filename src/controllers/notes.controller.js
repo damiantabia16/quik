@@ -64,8 +64,8 @@ export const getNote = async (req, res) => {
 
             res.json({
                 id: note.id,
-                title: note.title,
-                content: note.content,
+                note_title: note.note_title,
+                note_content: note.note_content,
                 board_id: note.board_id,
                 user_id: note.user_id
             });
@@ -95,8 +95,8 @@ export const updateNote = async (req, res) => {
 
             const updatedNote = {
                 id: noteId,
-                title,
-                content,
+                note_title,
+                note_content,
                 board_id: boardId,
                 user_id: userId
             };

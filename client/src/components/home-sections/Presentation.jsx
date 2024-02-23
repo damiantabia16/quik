@@ -7,7 +7,7 @@ function Slider({ imageIndex }) {
   return (
     <div className="relative order-2 text-center lg:w-[45%] h-full lg:flex-[0_0_auto] m-auto flex overflow-hidden grow-0">
       {images.map((image) => (
-          <img key={image.id} className={`w-full h-full object-cover block lg:p-[20px] shrink-0 grow-0 image-transition`} src={image.url} alt={image.alt} style={{ translate: `${-100 * imageIndex}%` }} />
+          <img key={image.id} className={`w-full h-full object-cover block shrink-0 grow-0 image-transition`} src={image.url} alt={image.alt} style={{ translate: `${-100 * imageIndex}%`, borderRadius: '0.5rem' }} />
       ))}
     </div>
   )

@@ -19,7 +19,7 @@ body {
 }
 
 .close-shadow {
-    box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+    box-shadow: 0 11px 15px -7px rgba(0, 0, 0, .2), 0 24px 38px 3px rgba(0, 0, 0, .14), 0 9px 46px 8px rgba(0, 0, 0, .12);
 }
 
 .conditional-rounded {
@@ -33,6 +33,10 @@ body {
 
 .navigate-blur {
     background: rgba(32, 37, 32, 0.9);
+}
+
+.add-note-blur {
+    background: rgba(32, 37, 32, 0.7);
 }
 
 .element #hover {
@@ -51,26 +55,98 @@ body {
 .border-top {
     border-top-width: 1px;
     border-top-style: solid;
-    border-top-color: hsla(211,18%,68%,0.16);
+    border-top-color: hsla(211, 18%, 68%, 0.16);
 }
 
 .border-right {
     border-right-width: 1px;
     border-right-style: solid;
-    border-right-color: hsla(211,18%,68%,0.16);
+    border-right-color: hsla(211, 18%, 68%, 0.16);
 }
 
 .border-bottom {
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    border-bottom-color: hsla(211,18%,68%,0.16);
+    border-bottom-color: hsla(211, 18%, 68%, 0.16);
 }
 
 .image-transition {
     transition: translate 100ms ease-in-out;
-    border-radius: 25px;
 }
-  
+
+.my-masonry-grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    width: auto;
+}
+
+.my-masonry-grid_column {
+    background-clip: padding-box;
+    margin: 0;
+}
+
+.draggable-note ul {
+    padding-left: 15px;
+    list-style-type: '•  ';
+}
+
+.draggable-note ol {
+    padding-left: 15px;
+    list-style-type: decimal;
+}
+
+.draggable-note:hover {
+    transition: all 0.1s ease-in-out;
+    box-shadow: 0 16px 10px 0 rgba(0, 0, 0, .14), 0 11px 18px 0 rgba(0, 0, 0, .12), 0 13px 5px -1px rgba(0, 0, 0, .2);
+}
+
+.slick-track {
+    padding-top: 40px;
+}
+
+@keyframes inAnimation {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes outAnimation {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes translateInAnimation {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes translateOutAnimation {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
 @media (min-width: 1024px) {
     #hero {
         height: calc(100vh - 198px);
