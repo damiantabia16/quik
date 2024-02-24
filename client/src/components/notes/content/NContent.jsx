@@ -170,7 +170,7 @@ function NoteCard({ note, onDragStart, draggedNote, onDrop, editNote }) {
   };
 
   return (
-    <div className='select-none mb-[8px] px-[20px]'>
+    <div className='select-none mb-[8px] px-[10px]'>
       <div
         draggable
         onDragStart={handleDragStart}
@@ -234,6 +234,11 @@ function Note({ boardId, cancelEditNote }) {
     'list', 'bullet'
   ];
 
+  useEffect(() => {
+    setValue('note_title', note.note_title);
+    setValue('note_content', note.note_content);
+  }, [note]);
+
   const onSubmit = async (data) => {
     try {
       await updateNote(boardId, { ...note, ...data });
@@ -252,12 +257,12 @@ function Note({ boardId, cancelEditNote }) {
           <div>
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className='p-[20px]'>
-                <input type="text" defaultValue={note.note_title} {...register('note_title')} placeholder={note.note_title ? '' : 'Título'} className='text-[#202520] outline-none w-full overflow-none whitespace-normal' />
+                <input type="text" {...register('note_title')} placeholder={note.note_title ? '' : 'Título'} autoComplete='off' className='text-[#202520] outline-none w-full overflow-none whitespace-normal' />
               </div>
               <ReactQuill theme='snow' formats={formats} modules={modules} value={note.note_content} onChange={(value) => setValue('note_content', value)} />
               <div id="options" className='flex justify-between items-center p-[20px]'>
                 {options.map(option => (
-                  <button key={option.id} className='rounded transition duration-150 hover:bg-[#c9c9c9] p-[5px]'>
+                  <button type='button' key={option.id} className='rounded transition duration-150 hover:bg-[#c9c9c9] p-[5px]'>
                     <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
                       {option.icon.default}
                     </span>
@@ -305,7 +310,7 @@ function NotesGrid({ boardId, editNote }) {
   };
 
   return (
-    <div className='relative mt-[40px] overflow-hidden'>
+    <div className='relative mt-[40px] overflow-hidden px-[10px]'>
       {notes.length > 0 ? (
         <Masonry breakpointCols={breakpoints} className="my-masonry-grid" columnClassName="my-masonry-grid_column">
           {notes.map((note) => (
