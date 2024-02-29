@@ -30,7 +30,7 @@ export const BoardProvider = ({ children }) => {
     const getBoard = async (id) => {
         try {
             const res = await getBoardRequest(id);
-            return res.data
+            return res.data;
         } catch (error) {
             console.error(error)
         }

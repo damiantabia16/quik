@@ -86,6 +86,10 @@ body {
     margin: 0;
 }
 
+.draggable-note {
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);;
+}
+
 .draggable-note ul {
     padding-left: 15px;
     list-style-type: '•  ';
@@ -97,12 +101,25 @@ body {
 }
 
 .draggable-note:hover {
-    transition: all 0.1s ease-in-out;
-    box-shadow: 0 16px 10px 0 rgba(0, 0, 0, .14), 0 11px 18px 0 rgba(0, 0, 0, .12), 0 13px 5px -1px rgba(0, 0, 0, .2);
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 10px 0 rgba(60,64,67,0.302), 0 6px 10px 0 rgba(60,64,67,0.149);
 }
 
 .slick-track {
     padding-top: 40px;
+}
+
+#option-tooltip {
+    z-index: 1000;
+}
+
+#color-picker {
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
+}
+
+.option-hover:hover {
+    opacity: 0.87;
+    background-color: rgba(95, 99, 104, 0.157);
 }
 
 @keyframes inAnimation {
@@ -143,6 +160,24 @@ body {
     }
     100% {
         transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+@keyframes displayColorPicker {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1
+    }
+}
+
+@keyframes hideColorPicker {
+    0% {
+        opacity: 1
+    }
+    100% {
         opacity: 0;
     }
 }

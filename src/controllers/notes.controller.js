@@ -3,7 +3,7 @@ import db from "../db.js";
 export const getNotes = async (req, res) => {
     const { boardId } = req.params;
     const userId = req.user.id;
-    
+
     try {
         const select = 'SELECT * FROM notes WHERE board_id = ? AND user_id = ?';
         db.query(select, [boardId, userId], (err, result) => {
@@ -66,6 +66,7 @@ export const getNote = async (req, res) => {
                 id: note.id,
                 note_title: note.note_title,
                 note_content: note.note_content,
+                background_color: note.background_color,
                 board_id: note.board_id,
                 user_id: note.user_id
             });
@@ -78,12 +79,12 @@ export const getNote = async (req, res) => {
 
 export const updateNote = async (req, res) => {
     const { boardId, noteId } = req.params;
-    const { note_title, note_content } = req.body;
+    const { note_title, note_content, background_color } = req.body;
     const userId = req.user.id;
 
     try {
-        const query = 'UPDATE notes SET note_title = ?, note_content = ? WHERE id = ? AND board_id = ? AND user_id = ?';
-        db.query(query, [note_title, note_content, noteId, boardId, userId], async (err, result) => {
+        const query = 'UPDATE notes SET note_title = ?, note_content = ?, background_color = ? WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [note_title, note_content, background_color, noteId, boardId, userId], async (err, result) => {
             if (err) {
                 console.error('Error al actualizar la nota:', err);
                 return res.status(500).json({ message: 'Error al actualizar la nota' });
@@ -97,6 +98,7 @@ export const updateNote = async (req, res) => {
                 id: noteId,
                 note_title,
                 note_content,
+                background_color,
                 board_id: boardId,
                 user_id: userId
             };
@@ -106,6 +108,54 @@ export const updateNote = async (req, res) => {
     } catch (error) {
         console.error('Error en la función updateNote:', err);
         res.status(500).json({ message: 'Error en la función updateNote' });
+    }
+};
+
+export const archiveNote = async (req, res) => {
+    const { boardId, noteId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const query = 'UPDATE notes SET is_archived = 1 WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [noteId, boardId, userId], async (err, result) => {
+            if (err) {
+                console.error('Error al archivar la nota:', err);
+                return res.status(500).json({ message: 'Error al archivar la nota' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Nota no encontrada o no permitida' });
+            }
+
+            return res.sendStatus(204);
+        });
+    } catch (error) {
+        console.error('Error en la función archiveNote:', err);
+        return res.status(500).json({ message: 'Error en la función archiveNote' });
+    }
+};
+
+export const unarchiveNote = async (req, res) => {
+    const { boardId, noteId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const query = 'UPDATE notes SET is_archived = 0 WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [noteId, boardId, userId], async (err, result) => {
+            if (err) {
+                console.error('Error al archivar la nota:', err);
+                return res.status(500).json({ message: 'Error al archivar la nota' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Nota no encontrada o no permitida' });
+            }
+
+            return res.sendStatus(204);
+        });
+    } catch (error) {
+        console.error('Error en la función archiveNote:', err);
+        return res.status(500).json({ message: 'Error en la función archiveNote' });
     }
 };
 
@@ -131,4 +181,4 @@ export const deleteNote = async (req, res) => {
         console.error('Error en la función deleteNote:', err);
         return res.status(500).json({ message: 'Error en la función deleteNote' });
     }
-}
+};

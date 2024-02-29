@@ -8,4 +8,8 @@ export const createNoteRequest = (boardId, note) => axios.post(`/tableros/${boar
 
 export const updateNoteRequest = (boardId, note) => axios.put(`/tableros/${boardId}/notas/${note.id}`, note);
 
+export const archiveNoteRequest = (boardId, note) => axios.put(`/tableros/${boardId}/notas/${note.id}/archivar`, note);
+
+export const unarchiveNoteRequest = (boardId, note) => axios.put(`/tableros/${boardId}/notas/${note.id}/desarchivar`, note);
+
 export const deleteNoteRequest = (boardId, id) => axios.delete(`/tableros/${boardId}/notas/${id}`);

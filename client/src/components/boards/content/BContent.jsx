@@ -38,8 +38,8 @@ export function CreateBoard() {
     return () => clearTimeout(timeoutId);
   }, [isMounted, form]);
 
-  const mountedStyle = { animation: 'inAnimation 0.1s' }
-  const unmountedStyle = { animation: 'outAnimation 0.1s', animationFillMode: "forwards" }
+  const mountedStyle = { animation: 'inAnimation 0.2s' }
+  const unmountedStyle = { animation: 'outAnimation 0.2s', animationFillMode: "forwards" }
 
   useEffect(() => {
     const fetchImages = async () => {

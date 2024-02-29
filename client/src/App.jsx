@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
@@ -7,6 +7,7 @@ import CreateBoard from './pages/CreateBoard';
 import Board from './pages/Board';
 import Profile from './pages/Profile';
 import ProtectedRoute from './ProtectedRoute';
+import Reminders from './components/notes/content/reminders/Reminders';
 import { AuthProvider } from './context/AuthContext';
 import { BoardProvider } from './context/BoardContext';
 import { NoteProvider } from './context/NoteContext';
@@ -25,8 +26,7 @@ function App() {
                 <Route path='/registrarse' element={<Register />} />
                 <Route element={<ProtectedRoute />}>
                   <Route path='/tableros' element={<Boards />} />
-                  <Route path='/crear-tablero' element={<CreateBoard />} />
-                  <Route path='/tableros/:id' element={<Board />} />
+                  <Route path='/tableros/:id/*' element={<Board />} />
                   <Route path='/perfil' element={<Profile />} />
                 </Route>
               </Routes>

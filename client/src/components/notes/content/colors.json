@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "color": "Transparente",
+        "hexadecimal": "transparent",
+        "border": "#bbb"
+    },
+    {
+        "id": 2,
+        "color": "Predeterminado",
+        "hexadecimal": "#eee",
+        "border": "#bbb"
+    },
+    {
+        "id": 3,
+        "color": "Coral",
+        "hexadecimal": "#faafa8",
+        "border": "#e6a19b"
+    },
+    {
+        "id": 4,
+        "color": "Melocotón",
+        "hexadecimal": "#f39f76",
+        "border": "#e4956f"
+    },
+    {
+        "id": 5,
+        "color": "Arena",
+        "hexadecimal": "#fff8b8",
+        "border": "#e2dca3"
+    },
+    {
+        "id": 6,
+        "color": "Menta",
+        "hexadecimal": "#e2f6d3",
+        "border": "#cddec0"
+    },
+    {
+        "id": 7,
+        "color": "Verde salvia",
+        "hexadecimal": "#b4ddd3",
+        "border": "#a6cbc2"
+    },
+    {
+        "id": 8,
+        "color": "Gris niebla",
+        "hexadecimal": "#d4e4ed",
+        "border": "#c7d6df"
+    },
+    {
+        "id": 9,
+        "color": "Azul oscuro",
+        "hexadecimal": "#aeccdc",
+        "border": "#a2bccb"
+    },
+    {
+        "id": 10,
+        "color": "Azul purpúreo",
+        "hexadecimal": "#d3bfdb",
+        "border": "#bfaec6"
+    },
+    {
+        "id": 11,
+        "color": "Salmón",
+        "hexadecimal": "#f6e2dd",
+        "border": "#e3d1cc"
+    }
+]

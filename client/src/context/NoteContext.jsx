@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { createNoteRequest, getNotesRequest, getNoteRequest, updateNoteRequest } from "../api/notes";
+import { createNoteRequest, getNotesRequest, getNoteRequest, updateNoteRequest, archiveNoteRequest, unarchiveNoteRequest } from "../api/notes";
 
 export const NoteContext = createContext();
 
@@ -39,6 +39,22 @@ export const NoteProvider = ({ children }) => {
         }
     };
 
+    const archiveNote = async (boardId, note) => {
+        try {
+            await archiveNoteRequest(boardId, note);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    const unarchiveNote = async (boardId, note) => {
+        try {
+            await unarchiveNoteRequest(boardId, note);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const exports = {
         notes,
         setNotes,
@@ -47,7 +63,9 @@ export const NoteProvider = ({ children }) => {
         createNote,
         getNotes,
         getNote,
-        updateNote
+        updateNote,
+        archiveNote,
+        unarchiveNote,
     };
 
     return (
