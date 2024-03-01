@@ -84,7 +84,7 @@ function Container() {
                     toggleCreateNote={toggleCreateNote} />} />
                 {isRemindersRoute && <Route path="/recordatorios" element={<Reminders boardId={boardId} />} />}
                 {isArchivesRoute && <Route path="/archivos" element={<Archives boardId={boardId} />} />}
-                {isBinRoute && <Route path="/papelera" element={<Bin />} />}
+                {isBinRoute && <Route path="/papelera" element={<Bin boardId={boardId} />} />}
             </Routes>
         </div>
     )

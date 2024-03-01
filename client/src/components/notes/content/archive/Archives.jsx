@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
 import ReactQuill, { Quill } from 'react-quill';
@@ -7,8 +7,10 @@ import { options } from '../options';
 import '../custom-toolbar.css';
 import "react-quill/dist/quill.snow.css";
 import { useNote } from '../../../../hooks/useNote';
+import { RiArchive2Fill } from "react-icons/ri";
 import Parser from 'html-react-parser';
 import Masonry from 'react-masonry-css';
+import ColorPicker from '../ui-elements/ColorPicker';
 
 function Searcher() {
   return (
@@ -21,12 +23,17 @@ function Searcher() {
   )
 };
 
-function NoteCard({ note, onDragStart, draggedNote, onDrop, editNote, handleUnarchiveNote }) {
+function NoteCard({ note, boardId, onDragStart, draggedNote, onDrop, editNote, handleUnarchiveNote, handleDeleteNote }) {
 
-  const { notes, setNotes } = useNote();
+  const noteRef = useRef(null);
+
+  const { notes, setNotes, getNotes, updateNote } = useNote();
 
   const [hover, setHover] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectColor, setSelectColor] = useState(false);
+  const [pickedColor, setPickedColor] = useState(note.background_color);
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   const truncateText = (text, maxLength) => {
     const truncatedText = text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -65,15 +72,44 @@ function NoteCard({ note, onDragStart, draggedNote, onDrop, editNote, handleUnar
     }
   };
 
-  const handleButtonClick = (optionId) => {
-    if (optionId === 4) {
-      handleUnarchiveNote(note.id);
+  const handleButtons = (optionId) => {
+    if (optionId === 2) {
+      if (selectColor) {
+        setSelectColor(false)
+      } else {
+        setSelectColor(true);
+      }
+    } else if (optionId === 4 || optionId === 7) {
+      setIsFadingOut(true);
+      setTimeout(() => {
+        if (optionId === 4) {
+          handleUnarchiveNote(note.id);
+        } else if (optionId === 7) {
+          handleDeleteNote(note.id);
+        }
+      }, 200);
     }
+  };
+
+  const handlePickColor = async (color) => {
+    try {
+      await updateNote(boardId, { ...note, background_color: color });
+      getNotes(boardId);
+      setPickedColor(color);
+    } catch (error) {
+      console.error('Error al actualizar el color de la nota:', error);
+    }
+  };
+
+  const cardStyle = {
+    backgroundColor: note.background_color,
+    transition: 'all 0.2s ease'
   };
 
   return (
     <div className='select-none mb-[8px] px-[10px]'>
       <div
+        ref={noteRef}
         draggable
         onDragStart={handleDragStart}
         onDragOver={handleDragOver}
@@ -81,7 +117,10 @@ function NoteCard({ note, onDragStart, draggedNote, onDrop, editNote, handleUnar
         onDrop={handleDrop}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className={`border border-[#e0e0e0] bg-[#eee] text-[#202520] rounded draggable-note ${isDragging ? 'opacity-0' : ''}`}>
+        className={`relative text-[#202520] rounded draggable-note
+        ${isDragging ? 'opacity-0' : ''}
+        ${isFadingOut ? 'fade-out' : 'opacity-transition'}`}
+        style={cardStyle}>
         <div onClick={() => editNote(note.id)} className='min-h-[60px]'>
           {!note.note_title && !note.note_content ? (
             <div className='py-[12px] px-[16px]'>
@@ -102,8 +141,8 @@ function NoteCard({ note, onDragStart, draggedNote, onDrop, editNote, handleUnar
         </div>
         <div id="options" className={`flex justify-between items-center p-[15px] ${hover ? 'visible opacity-100' : 'invisible opacity-0'} transition duration-150`}>
           {options.map(option => (
-            (option.id !== 3 && option.id !== 5 && option.id !== 6) && (
-              <button key={option.id} onClick={() => handleButtonClick(option.id)}>
+            (option.id !== 3 && option.id !== 5 && option.id !== 6 && option.id !== 8 && option.id !== 9) && (
+              <button data-option-id={option.id} key={option.id} onClick={() => handleButtons(option.id)} className={`rounded transition duration-100 option-hover p-[5px]`}>
                 <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
                   {option.icon.default}
                 </span>
@@ -113,6 +152,7 @@ function NoteCard({ note, onDragStart, draggedNote, onDrop, editNote, handleUnar
           <Tooltip id='option-tooltip' effect="solid" place="bottom" />
         </div>
       </div>
+      <ColorPicker selectColor={selectColor} setSelectColor={setSelectColor} pickedColor={pickedColor} noteRef={noteRef} handlePickColor={handlePickColor} />
     </div>
   )
 }
@@ -165,11 +205,11 @@ function Note({ boardId, cancelEditNote }) {
               <div id="options" className='flex justify-between items-center p-[20px]'>
                 {options.map(option => (
                   option.id !== 3 && (
-                  <button type='button' key={option.id} className='rounded transition duration-150 hover:bg-[#c9c9c9] p-[5px]'>
-                    <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
-                      {option.icon.default}
-                    </span>
-                  </button>
+                    <button type='button' key={option.id} className='rounded transition duration-150 hover:bg-[#c9c9c9] p-[5px]'>
+                      <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
+                        {option.icon.default}
+                      </span>
+                    </button>
                   )
                 ))}
                 <Tooltip id='option-tooltip' effect="solid" place="bottom" />
@@ -183,7 +223,7 @@ function Note({ boardId, cancelEditNote }) {
   )
 }
 
-function ArchivedGrid({ boardId, editNote, handleUnarchiveNote }) {
+function ArchivedGrid({ boardId, editNote, handleUnarchiveNote, handleDeleteNote }) {
   const { notes, getNotes } = useNote();
 
   const [draggedNote, setDraggedNote] = useState(null);
@@ -192,7 +232,7 @@ function ArchivedGrid({ boardId, editNote, handleUnarchiveNote }) {
     getNotes(boardId);
   }, [boardId]);
 
-  const filteredNotes = notes.filter(note => note.is_archived);
+  const filteredNotes = notes.filter(note => note.is_archived && !note.in_bin);
 
   const handleDragStart = (note) => {
     setDraggedNote(note)
@@ -219,22 +259,32 @@ function ArchivedGrid({ boardId, editNote, handleUnarchiveNote }) {
       {filteredNotes.length > 0 ? (
         <Masonry breakpointCols={breakpoints} className="my-masonry-grid" columnClassName="my-masonry-grid_column">
           {filteredNotes.map((note) => (
-            <NoteCard key={note.id} id={note.id} note={note} onDragStart={handleDragStart} onDrop={handleDrop} draggedNote={draggedNote} editNote={editNote} handleUnarchiveNote={handleUnarchiveNote} />
+            <NoteCard
+              key={note.id}
+              id={note.id}
+              note={note}
+              boardId={boardId}
+              onDragStart={handleDragStart}
+              onDrop={handleDrop}
+              draggedNote={draggedNote}
+              editNote={editNote}
+              handleUnarchiveNote={handleUnarchiveNote}
+              handleDeleteNote={handleDeleteNote} />
           ))}
         </Masonry>
       ) : (
         <div className='p-[20px] w-full h-full m-auto flex flex-col items-center justify-center'>
           <div className='cursor-default add-note-blur rounded p-[20px] text-center'>
             <p className='text-[35px] mb-[10px]'>
-              Aún no tienes ninguna nota archivada.
+              Nada que ocultar por aquí.
             </p>
             <p>
-              <span>
-                Haz click en el botón{' '}
-                <span className='bg-[#98ff98] select-none text-[#202520] rounded-full w-[20px] h-[20px] inline-flex text-center justify-center items-center font-semibold'>
-                  +
-                </span>{' '}
-                en el costado inferior derecho para crear una.
+              <span className='flex items-center justify-center'>
+                Haz click en el botón
+                <span className='bg-[#98ff98] mx-[5px] select-none text-[#202520] rounded-full w-[20px] h-[20px] inline-flex text-center justify-center items-center font-semibold'>
+                  <RiArchive2Fill />
+                </span>
+                para archivar una.
               </span>
             </p>
           </div>
@@ -246,7 +296,7 @@ function ArchivedGrid({ boardId, editNote, handleUnarchiveNote }) {
 
 function Archives({ boardId }) {
 
-  const { note, setNote, getNote, getNotes, unarchiveNote } = useNote();
+  const { note, setNote, getNote, getNotes, unarchiveNote, sendNoteToBin } = useNote();
 
   const [editNoteForm, setEditNoteForm] = useState(false);
 
@@ -272,6 +322,15 @@ function Archives({ boardId }) {
     }
   };
 
+  const handleDeleteNote = async (noteId) => {
+    try {
+      await sendNoteToBin(boardId, { id: noteId });
+      getNotes(boardId);
+    } catch (error) {
+      console.error('Error al archivar la nota:', error);
+    }
+  };
+
   useEffect(() => {
     setNote(note);
   }, [note]);
@@ -279,7 +338,7 @@ function Archives({ boardId }) {
   return (
     <section id="archives" className="pt-[12px] pl-[70px] flex flex-col flex-1 overflow-y-auto w-full">
       <Searcher />
-      <ArchivedGrid boardId={boardId} editNote={editNote} handleUnarchiveNote={handleUnarchiveNote} />
+      <ArchivedGrid boardId={boardId} editNote={editNote} handleUnarchiveNote={handleUnarchiveNote} handleDeleteNote={handleDeleteNote} />
       {editNoteForm && <Note cancelEditNote={cancelEditNote} boardId={boardId} />}
     </section>
   )

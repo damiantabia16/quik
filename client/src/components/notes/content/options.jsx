@@ -1,6 +1,5 @@
-import { MdAddAlarm, MdFormatColorFill, MdUndo, MdRedo } from 'react-icons/md'
+import { MdAddAlarm, MdFormatColorFill, MdUndo, MdRedo, MdDelete, MdDeleteForever, MdRestoreFromTrash } from 'react-icons/md'
 import { RiArchive2Fill, RiInboxUnarchiveFill } from "react-icons/ri";
-import { FaRegTrashCan } from "react-icons/fa6";
 
 export const options = [
     {
@@ -48,8 +47,22 @@ export const options = [
     {
         id: 7,
         icon: {
-            default: <FaRegTrashCan />,
+            default: <MdDelete />,
         },
         alt: 'Eliminar'
+    },
+    {
+        id: 8,
+        icon: {
+            default: <MdDeleteForever />,
+        },
+        alt: 'Eliminar definitivamente'
+    },
+    {
+        id: 9,
+        icon: {
+            default: <MdRestoreFromTrash />,
+        },
+        alt: 'Restaurar'
     }
 ]

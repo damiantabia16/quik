@@ -21,12 +21,12 @@ export const getNotes = async (req, res) => {
 
 export const createNote = async (req, res) => {
     const { boardId } = req.params;
-    const { note_title, note_content } = req.body;
+    const { note_title, note_content, background_color } = req.body;
     const userId = req.user.id;
 
     try {
-        const insert = 'INSERT INTO notes (note_title, note_content, board_id, user_id) VALUES (?, ?, ?, ?)';
-        db.query(insert, [note_title, note_content, boardId, userId], (err, result) => {
+        const insert = 'INSERT INTO notes (note_title, note_content, background_color, board_id, user_id) VALUES (?, ?, ?, ?)';
+        db.query(insert, [note_title, note_content, background_color, boardId, userId], (err, result) => {
             if (err) {
                 console.error('Error al insertar en la base de datos:', err);
                 return res.status(500).json({ message: 'Error al insertar en la base de datos:' });
@@ -34,6 +34,7 @@ export const createNote = async (req, res) => {
             res.json({
                 note_title,
                 note_content,
+                background_color,
                 board_id: boardId,
                 user_id: userId
             })
@@ -67,6 +68,7 @@ export const getNote = async (req, res) => {
                 note_title: note.note_title,
                 note_content: note.note_content,
                 background_color: note.background_color,
+                reminder: note.reminder,
                 board_id: note.board_id,
                 user_id: note.user_id
             });
@@ -108,6 +110,55 @@ export const updateNote = async (req, res) => {
     } catch (error) {
         console.error('Error en la función updateNote:', err);
         res.status(500).json({ message: 'Error en la función updateNote' });
+    }
+};
+
+export const setReminder = async (req, res) => {
+    const { boardId, noteId } = req.params;
+    const { reminder } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const query = 'UPDATE notes SET reminder = ? WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [reminder, noteId, boardId, userId], async (err, result) => {
+            if (err) {
+                console.error('Error al establecer el recordatorio:', err);
+                return res.status(500).json({ message: 'Error al establecer el recordatorio' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Nota no encontrada o no permitida' });
+            }
+
+            return res.sendStatus(204);
+        });
+    } catch (error) {
+        console.error('Error en la función setReminder:', err);
+        return res.status(500).json({ message: 'Error en la función setReminder' });
+    }
+};
+
+export const deleteReminder = async (req, res) => {
+    const { boardId, noteId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const query = 'UPDATE notes SET reminder = NULL WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [noteId, boardId, userId], async (err, result) => {
+            if (err) {
+                console.error('Error al eliminar el recordatorio:', err);
+                return res.status(500).json({ message: 'Error al eliminar el recordatorio' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Nota no encontrada o no permitida' });
+            }
+
+            return res.sendStatus(204);
+        });
+    } catch (error) {
+        console.error('Error en la función deleteReminder:', err);
+        return res.status(500).json({ message: 'Error en la función deleteReminder' });
     }
 };
 
@@ -156,6 +207,54 @@ export const unarchiveNote = async (req, res) => {
     } catch (error) {
         console.error('Error en la función archiveNote:', err);
         return res.status(500).json({ message: 'Error en la función archiveNote' });
+    }
+};
+
+export const sendNoteToBin = async (req, res) => {
+    const { boardId, noteId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const query = 'UPDATE notes SET in_bin = 1 WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [noteId, boardId, userId], async (err, result) => {
+            if (err) {
+                console.error('Error al archivar la nota:', err);
+                return res.status(500).json({ message: 'Error al eliminar la nota' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Nota no encontrada o no permitida' });
+            }
+
+            return res.sendStatus(204);
+        });
+    } catch (error) {
+        console.error('Error en la función sendNoteToBin:', err);
+        return res.status(500).json({ message: 'Error en la función sendNoteToBin' });
+    }
+};
+
+export const restoreNote = async (req, res) => {
+    const { boardId, noteId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const query = 'UPDATE notes SET in_bin = 0 WHERE id = ? AND board_id = ? AND user_id = ?';
+        db.query(query, [noteId, boardId, userId], async (err, result) => {
+            if (err) {
+                console.error('Error al archivar la nota:', err);
+                return res.status(500).json({ message: 'Error al restaurar la nota' });
+            }
+
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ message: 'Nota no encontrada o no permitida' });
+            }
+
+            return res.sendStatus(204);
+        });
+    } catch (error) {
+        console.error('Error en la función archiveNote:', err);
+        return res.status(500).json({ message: 'Error en la función restoreNote' });
     }
 };
 

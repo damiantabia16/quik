@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import colors from '../colors.json';
 import { Tooltip } from 'react-tooltip';
 import { MdCheckCircle, MdFormatColorReset } from "react-icons/md";
 
-export default function ColorPicker({ note, selectColor, setSelectColor, pickedColor, noteRef, handlePickColor }) {
+export default function ColorPicker({ selectColor, setSelectColor, pickedColor, noteRef, handlePickColor }) {
 
     const pickerRef = useRef(null);
 
@@ -28,17 +28,17 @@ export default function ColorPicker({ note, selectColor, setSelectColor, pickedC
     const COLOR_PICKER_DISPLAY = {
         top: noteCard.bottom - 6 + 'px',
         left: noteCard.left + 'px',
-        animation: 'displayColorPicker 0.2s'
+        animation: 'displayUi 0.2s'
     };
     const COLOR_PICKER_HIDE = {
-        animation: 'hideColorPicker 0.2s',
+        animation: 'hideUi 0.2s',
         animationFillMode: 'forwards'
     }
 
     if (!selectColor) return null;
 
     return ReactDOM.createPortal(
-        <div ref={pickerRef} id='color-picker' className={`${selectColor ? 'absolute z-[999] flex flex-wrap p-[10px] rounded bg-[#eee]' : 'hidden'}`} style={selectColor ? COLOR_PICKER_DISPLAY : COLOR_PICKER_HIDE}>
+        <div ref={pickerRef} id='color-picker' className={`${selectColor ? 'absolute flex flex-wrap p-[10px] rounded bg-[#eee]' : 'hidden'}`} style={selectColor ? COLOR_PICKER_DISPLAY : COLOR_PICKER_HIDE}>
             {colors.map((color) => (
                 <div role='option' className='m-[2px]' key={color.id}>
                     <div

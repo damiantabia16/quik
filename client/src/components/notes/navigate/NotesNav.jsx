@@ -46,7 +46,7 @@ function NotesNav({ boardId }) {
               <div>
                 <div
                   className="pt-[12px] pb-[20px]"
-                  onMouseEnter={() => { timeoutId = setTimeout(() => { setMenu(true) }, 200) }}
+                  onMouseEnter={() => { timeoutId = setTimeout(() => { setMenu(true) }, 300) }}
                   onMouseLeave={() => { clearTimeout(timeoutId); setMenu(false) }}>
                   <Link to={`/tableros/${boardId}`}>
                     <div role="button" onClick={() => handleItemClick('BsFileText')} className={`flex flex-row items-center ml-[10px] w-[50px] h-[50px] rounded-full transition-all duration-100 ${menu ? 'w-full pl-[10px] rounded-none navigate-conditional-rounded' : ''} ${selectedItem === 'BsFileText' ? 'bg-[#98ff98] text-[#202520] font-bold' : ''}`}>
@@ -84,7 +84,7 @@ function NotesNav({ boardId }) {
                     <button onClick={toggleForm} className="text-[22px] ml-[5px]">+</button>
                   </div>
                   <div
-                    onMouseEnter={() => { timeoutId = setTimeout(() => { setMenu(true) }, 200) }}
+                    onMouseEnter={() => { timeoutId = setTimeout(() => { setMenu(true) }, 300) }}
                     onMouseLeave={() => { clearTimeout(timeoutId); setMenu(false) }}>
                     {boards.map((board) => (
                       <Link key={board.id} to={`/tableros/${board.id}`}>
