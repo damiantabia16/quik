@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import colors from '../colors.json';
 import { Tooltip } from 'react-tooltip';
 import { MdCheckCircle, MdFormatColorReset } from "react-icons/md";
 
 export default function ColorPicker({ selectColor, setSelectColor, pickedColor, noteRef, handlePickColor }) {
+
+    const [noteCard, setNoteCard] = useState(null);
 
     const pickerRef = useRef(null);
 
@@ -23,11 +25,28 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
         };
     }, [setSelectColor]);
 
+
+    useEffect(() => {
+        function updateNoteCardPosition() {
+            if (noteRef.current) {
+                const newNoteCard = noteRef.current.getBoundingClientRect();
+                setNoteCard(newNoteCard);
+            }
+        }
+
+        updateNoteCardPosition();
+
+        window.addEventListener('resize', updateNoteCardPosition);
+
+        return () => {
+            window.removeEventListener('resize', updateNoteCardPosition);
+        };
+    }, [noteRef]);
+
     if (!noteRef.current) return null;
-    const noteCard = noteRef.current.getBoundingClientRect();
     const COLOR_PICKER_DISPLAY = {
-        top: noteCard.bottom - 6 + 'px',
-        left: noteCard.left + 'px',
+        top: noteCard ? noteCard.bottom + - 6 + 'px' : 'auto',
+        left: noteCard ? noteCard.left + 'px' : 'auto',
         animation: 'displayUi 0.2s'
     };
     const COLOR_PICKER_HIDE = {
@@ -38,7 +57,7 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
     if (!selectColor) return null;
 
     return ReactDOM.createPortal(
-        <div ref={pickerRef} id='color-picker' className={`${selectColor ? 'absolute flex flex-wrap p-[10px] rounded bg-[#eee]' : 'hidden'}`} style={selectColor ? COLOR_PICKER_DISPLAY : COLOR_PICKER_HIDE}>
+        <div ref={pickerRef} id='color-picker' className={`${selectColor ? 'absolute flex flex-wrap mr-[20px] py-[10px] px-[20px] rounded bg-[#eee]' : 'hidden'}`} style={selectColor ? COLOR_PICKER_DISPLAY : COLOR_PICKER_HIDE}>
             {colors.map((color) => (
                 <div role='option' className='m-[2px]' key={color.id}>
                     <div
@@ -53,7 +72,7 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
 
                         {pickedColor === color.hexadecimal && <MdCheckCircle className='absolute -top-[20%] -right-[30%] text-xl text-[#ff1493] bg-white rounded-full' />}
                         {color.hexadecimal === 'transparent' && <MdFormatColorReset className='absolute pointer-events-none text-[#202520] inline-block m-auto w-[20px] top-0 right-0 bottom-0 left-0 h-full' />}
-                        
+
                     </div>
                 </div>
             ))}

@@ -34,11 +34,6 @@
     margin-bottom: 5px;
 }
 
-.ql-editor a {
-    text-decoration-line: underline;
-    color: #15c;
-}
-
 .ql-toolbar.ql-snow {
     padding: 5px 0 0 0!important;
     border: none!important;
@@ -97,9 +92,9 @@
 .ql-snow .ql-toolbar .ql-picker-item:hover,
 .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
 .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
-    background-color: #c9c9c9;
+    background-color: rgba(95, 99, 104, 0.3);
     color: #202520!important;
-    transition: all 0.150s ease;
+    transition: all 0.2s ease;
 }
 
 .ql-snow.ql-toolbar button:hover .ql-fill,

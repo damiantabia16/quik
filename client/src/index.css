@@ -119,8 +119,7 @@ body {
 }
 
 .option-hover:hover {
-    opacity: 0.87;
-    background-color: rgba(95, 99, 104, 0.157);
+    background-color: rgba(95, 99, 104, 0.3);
 }
 
 .opacity-transition {
@@ -129,6 +128,10 @@ body {
 
 .fade-out {
     opacity: 0;
+}
+
+.bottom-color {
+    border-bottom-color: rgba(0,0,0,.2);
 }
 
 @keyframes inAnimation {

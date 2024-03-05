@@ -5,13 +5,37 @@ import Archives from "./content/archive/Archives";
 import Bin from "./content/bin/Bin";
 import { useBoard } from "../../hooks/useBoard";
 import { useEffect, useState } from "react";
-import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
+import { Routes, Route, useLocation, useParams } from "react-router-dom";
+import Message from "./content/ui-elements/Message";
 
-function Grid({ boardId, boardName, isMounted, setIsMounted, createNoteForm,setCreateNoteForm, content, setContent, toggleCreateNote }) {
+function Grid({
+    boardId,
+    boardName,
+    isMounted,
+    setIsMounted,
+    createNoteForm,
+    setCreateNoteForm,
+    content,
+    setContent,
+    toggleCreateNote,
+    message,
+    setMessage,
+    }) {
     return (
         <>
-            <NotesContent boardId={boardId} boardName={boardName} />
-            <CreateNote boardId={boardId} isMounted={isMounted} setIsMounted={setIsMounted} createNoteForm={createNoteForm} setCreateNoteForm={setCreateNoteForm} content={content} setContent={setContent} />
+            <NotesContent
+                boardId={boardId}
+                boardName={boardName}
+                message={message}
+                setMessage={setMessage} />
+            <CreateNote
+                boardId={boardId}
+                isMounted={isMounted}
+                setIsMounted={setIsMounted}
+                createNoteForm={createNoteForm}
+                setCreateNoteForm={setCreateNoteForm}
+                content={content}
+                setContent={setContent} />
             <div className='fixed w-[70px] h-[70px] flex items-center justify-center right-0 bottom-0 bg-[#98ff98] rounded-full mr-[30px] mb-[30px] transition duration-150 hover:bg-[#78ff78]'>
                 <button onClick={toggleCreateNote} className={`text-[60px] text-[#202124] w-full outline-none ${isMounted ? 'rotate-45' : ''} transition duration-200`}>+</button>
             </div>
@@ -32,6 +56,8 @@ function Container() {
     const [isMounted, setIsMounted] = useState(false);
     const [createNoteForm, setCreateNoteForm] = useState(false);
     const [content, setContent] = useState('');
+    const [message, setMessage] = useState('');
+    const [undoPerformed, setUndoPerformed] = useState(false);
 
     useEffect(() => {
         const loadBoard = async () => {
@@ -81,11 +107,15 @@ function Container() {
                     setCreateNoteForm={setCreateNoteForm}
                     content={content}
                     setContent={setContent}
-                    toggleCreateNote={toggleCreateNote} />} />
-                {isRemindersRoute && <Route path="/recordatorios" element={<Reminders boardId={boardId} />} />}
-                {isArchivesRoute && <Route path="/archivos" element={<Archives boardId={boardId} />} />}
-                {isBinRoute && <Route path="/papelera" element={<Bin boardId={boardId} />} />}
+                    toggleCreateNote={toggleCreateNote}
+                    message={message}
+                    setMessage={setMessage} />}
+                />
+                {isRemindersRoute && <Route path="/recordatorios" element={<Reminders boardId={boardId} message={message} setMessage={setMessage} />} />}
+                {isArchivesRoute && <Route path="/archivos" element={<Archives boardId={boardId} message={message} setMessage={setMessage} />} />}
+                {isBinRoute && <Route path="/papelera" element={<Bin boardId={boardId} message={message} setMessage={setMessage} />} />}
             </Routes>
+            <Message message={message} setMessage={setMessage} undoPerformed={undoPerformed} />
         </div>
     )
 }

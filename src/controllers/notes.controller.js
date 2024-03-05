@@ -25,8 +25,11 @@ export const createNote = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const insert = 'INSERT INTO notes (note_title, note_content, background_color, board_id, user_id) VALUES (?, ?, ?, ?)';
-        db.query(insert, [note_title, note_content, background_color, boardId, userId], (err, result) => {
+
+        const color = background_color || '#eee'
+
+        const insert = 'INSERT INTO notes (note_title, note_content, background_color, board_id, user_id) VALUES (?, ?, ?, ?, ?)';
+        db.query(insert, [note_title, note_content, color, boardId, userId], (err, result) => {
             if (err) {
                 console.error('Error al insertar en la base de datos:', err);
                 return res.status(500).json({ message: 'Error al insertar en la base de datos:' });
