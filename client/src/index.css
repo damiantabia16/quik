@@ -10,6 +10,20 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+b, strong {
+    font-weight: 600;
+}
+
+div[role='textbox'] ul {
+    list-style: '•  ';
+    padding-left: 20px;
+}
+
+div[role='textbox'] ol {
+    list-style: decimal;
+    padding-left: 20px;
+}
+
 .background {
     background: linear-gradient(450deg, #202520, #404540);
 }
@@ -88,7 +102,6 @@ body {
 
 .draggable-note {
     box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
-    ;
 }
 
 .draggable-note ul {
@@ -132,6 +145,28 @@ body {
 
 .bottom-color {
     border-bottom-color: rgba(0,0,0,.2);
+}
+.react-calendar__navigation button {
+    min-width: 0!important;
+    width: 44px;
+}
+
+.react-calendar__month-view__weekdays {
+    justify-content: space-around;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+    padding: 0.5em 0 0.5em 0;
+    flex: none!important;
+}
+
+.react-calendar__tile:hover {
+    background-color: #98ff98!important;
+}
+
+.react-calendar__tile--active {
+    color: #202520;
+    background-color: #98ff98!important;
 }
 
 @keyframes inAnimation {

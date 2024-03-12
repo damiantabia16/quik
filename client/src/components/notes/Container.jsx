@@ -1,5 +1,5 @@
 import NotesNav from "./navigate/NotesNav";
-import NotesContent, { CreateNote } from "./content/grid/NContent";
+import Notes, { CreateNote } from "./content/grid/Notes";
 import Reminders from "./content/reminders/Reminders";
 import Archives from "./content/archive/Archives";
 import Bin from "./content/bin/Bin";
@@ -7,6 +7,7 @@ import { useBoard } from "../../hooks/useBoard";
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation, useParams } from "react-router-dom";
 import Message from "./content/ui-elements/Message";
+import useUndoRedo from "../../hooks/useUndoRedo";
 
 function Grid({
     boardId,
@@ -15,15 +16,14 @@ function Grid({
     setIsMounted,
     createNoteForm,
     setCreateNoteForm,
-    content,
-    setContent,
     toggleCreateNote,
     message,
     setMessage,
     }) {
+
     return (
         <>
-            <NotesContent
+            <Notes
                 boardId={boardId}
                 boardName={boardName}
                 message={message}
@@ -33,9 +33,7 @@ function Grid({
                 isMounted={isMounted}
                 setIsMounted={setIsMounted}
                 createNoteForm={createNoteForm}
-                setCreateNoteForm={setCreateNoteForm}
-                content={content}
-                setContent={setContent} />
+                setCreateNoteForm={setCreateNoteForm} />
             <div className='fixed w-[70px] h-[70px] flex items-center justify-center right-0 bottom-0 bg-[#98ff98] rounded-full mr-[30px] mb-[30px] transition duration-150 hover:bg-[#78ff78]'>
                 <button onClick={toggleCreateNote} className={`text-[60px] text-[#202124] w-full outline-none ${isMounted ? 'rotate-45' : ''} transition duration-200`}>+</button>
             </div>
@@ -55,7 +53,6 @@ function Container() {
     const [backgroundValue, setBackgroundValue] = useState(null);
     const [isMounted, setIsMounted] = useState(false);
     const [createNoteForm, setCreateNoteForm] = useState(false);
-    const [content, setContent] = useState('');
     const [message, setMessage] = useState('');
     const [undoPerformed, setUndoPerformed] = useState(false);
 
@@ -81,10 +78,7 @@ function Container() {
     };
 
     const toggleCreateNote = () => {
-        setIsMounted(!isMounted);
-        if (isMounted === false) {
-            setContent('')
-        }
+        setIsMounted(true);
     };
 
     const { pathname } = useLocation();
@@ -105,8 +99,6 @@ function Container() {
                     setIsMounted={setIsMounted}
                     createNoteForm={createNoteForm}
                     setCreateNoteForm={setCreateNoteForm}
-                    content={content}
-                    setContent={setContent}
                     toggleCreateNote={toggleCreateNote}
                     message={message}
                     setMessage={setMessage} />}

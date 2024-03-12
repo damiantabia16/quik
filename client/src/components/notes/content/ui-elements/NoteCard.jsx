@@ -224,10 +224,12 @@ export default function NoteCard({
                                     <button
                                         data-option-id={option.id}
                                         key={option.id}
+                                        data-tooltip-id='option-tooltip'
+                                        data-tooltip-content={option.alt}
                                         onClick={() => handleButtons(option.id, note.id)}
                                         className={`rounded transition duration-200 option-hover p-[5px]`}
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
+                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -239,10 +241,12 @@ export default function NoteCard({
                                     <button
                                         data-option-id={option.id}
                                         key={option.id}
+                                        data-tooltip-id='option-tooltip'
+                                        data-tooltip-content={option.alt}
                                         onClick={() => handleButtons(option.id, note.id)}
                                         className={`rounded transition duration-200 option-hover p-[5px]`}
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
+                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -255,9 +259,11 @@ export default function NoteCard({
                                         data-option-id={option.id}
                                         key={option.id}
                                         onClick={() => handleButtons(option.id, note.id)}
+                                        data-tooltip-id='option-tooltip'
+                                        data-tooltip-content={option.alt}
                                         className={`rounded transition duration-200 option-hover p-[5px]`}
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
+                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -270,9 +276,11 @@ export default function NoteCard({
                                         data-option-id={option.id}
                                         key={option.id}
                                         onClick={() => handleButtons(option.id, note.id)}
+                                        data-tooltip-id='option-tooltip'
+                                        data-tooltip-content={option.alt}
                                         className={`rounded transition duration-200 option-hover p-[5px]`}
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
+                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>

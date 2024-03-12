@@ -6,25 +6,8 @@ import { MdCheckCircle, MdFormatColorReset } from "react-icons/md";
 
 export default function ColorPicker({ selectColor, setSelectColor, pickedColor, noteRef, handlePickColor }) {
 
-    const [noteCard, setNoteCard] = useState(null);
-
     const pickerRef = useRef(null);
-
-    const handleOutsideClick = (e) => {
-        const isColorPickerButtonClicked = noteRef.current.contains(e.target.closest("#options button[data-option-id='2']"));
-        if (!isColorPickerButtonClicked && pickerRef.current && !pickerRef.current.contains(e.target)) {
-            setSelectColor(false);
-        }
-    };
-
-    useEffect(() => {
-        document.addEventListener("mousedown", handleOutsideClick);
-
-        return () => {
-            document.removeEventListener("mousedown", handleOutsideClick);
-        };
-    }, [setSelectColor]);
-
+    const [noteCard, setNoteCard] = useState(null);
 
     useEffect(() => {
         function updateNoteCardPosition() {
@@ -35,17 +18,33 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
         }
 
         updateNoteCardPosition();
-
         window.addEventListener('resize', updateNoteCardPosition);
 
         return () => {
             window.removeEventListener('resize', updateNoteCardPosition);
         };
-    }, [noteRef]);
+    }, [noteRef.current]);
 
-    if (!noteRef.current) return null;
+    const handleOutsideClick = (e) => {
+        const isColorPickerButtonClicked = noteRef.current.contains(e.target.closest("#options button[data-option-id='2']"));
+        const clickedOutsideColorPicker = pickerRef.current && !pickerRef.current.contains(e.target);
+        if (!isColorPickerButtonClicked && clickedOutsideColorPicker) {
+            setSelectColor(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleOutsideClick);
+
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick);
+        };
+    }, [noteRef, pickerRef, setSelectColor]);
+
+    if (!selectColor) return null;
+
     const COLOR_PICKER_DISPLAY = {
-        top: noteCard ? noteCard.bottom + - 6 + 'px' : 'auto',
+        top: noteCard ? noteCard.bottom - 6 + 'px' : 'auto',
         left: noteCard ? noteCard.left + 'px' : 'auto',
         animation: 'displayUi 0.2s'
     };
@@ -53,8 +52,6 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
         animation: 'hideUi 0.2s',
         animationFillMode: 'forwards'
     }
-
-    if (!selectColor) return null;
 
     return ReactDOM.createPortal(
         <div ref={pickerRef} id='color-picker' className={`${selectColor ? 'absolute flex flex-wrap mr-[20px] py-[10px] px-[20px] rounded bg-[#eee]' : 'hidden'}`} style={selectColor ? COLOR_PICKER_DISPLAY : COLOR_PICKER_HIDE}>

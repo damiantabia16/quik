@@ -1,15 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { FaSearch } from 'react-icons/fa';
-import ReactQuill, { Quill } from 'react-quill';
 import { Tooltip } from 'react-tooltip';
 import { options } from '../options';
+import { styles } from '../styles';
 import '../custom-toolbar.css';
 import "react-quill/dist/quill.snow.css";
 import { useNote } from '../../../../hooks/useNote';
 import Masonry from 'react-masonry-css';
 import Note from '../ui-elements/Note';
 import NoteCard from '../ui-elements/NoteCard';
+import Reminder from '../ui-elements/Reminder';
+import ColorPicker from '../ui-elements/ColorPicker';
+import useUndoRedo from '../../../../hooks/useUndoRedo';
 
 function Searcher({ boardName }) {
 
@@ -25,20 +28,19 @@ function Searcher({ boardName }) {
   )
 };
 
-export function CreateNote({ boardId, isMounted, setIsMounted, createNoteForm, setCreateNoteForm, content, setContent }) {
+export function CreateNote({ boardId, isMounted, setIsMounted, createNoteForm, setCreateNoteForm }) {
 
-  const modules = {
-    toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }]
-    ],
-  };
+  const init = '';
 
-  const formats = [
-    'bold', 'italic', 'underline', 'strike', 'color', 'background',
-    'list', 'bullet'
-  ];
+  const {
+    state,
+    setState,
+    index,
+    lastIndex,
+    handleReset,
+    handleUndo,
+    handleRedo
+  } = useUndoRedo(init);
 
   useEffect(() => {
     let timeoutId;
@@ -60,11 +62,20 @@ export function CreateNote({ boardId, isMounted, setIsMounted, createNoteForm, s
 
   const { register, handleSubmit, reset } = useForm();
 
+  const [placeholder, setPlaceholder] = useState(true);
+  const [addReminder, setAddReminder] = useState(false);
+  const [selectColor, setSelectColor] = useState(false);
+
+  const canUndo = index > 0;
+  const canRedo = index < lastIndex;
+
   let formRef = useRef(null);
 
   const handleOutsideClick = (e) => {
     if (formRef?.current && !formRef.current.contains(e.target)) {
       setIsMounted(false);
+      handleReset(init);
+      setPlaceholder(true);
       reset();
     }
   };
@@ -77,14 +88,145 @@ export function CreateNote({ boardId, isMounted, setIsMounted, createNoteForm, s
     };
   }, [setIsMounted]);
 
+  const editorRef = useRef(null);
+
+  const handleContentChange = (e) => {
+    const text = e.target.innerHTML;
+    setState(text);
+    setPlaceholder(text.length === 0);
+  };
+
+  useEffect(() => {
+    if (editorRef.current) {
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.setStart(editorRef.current, editorRef.current.childNodes.length);
+      range.collapse(true);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  }, [state]);
+
+  const isStyleApplied = (style, range) => {
+    if (!range || range.collapsed) {
+      return false;
+    }
+
+    const element = range.commonAncestorContainer.nodeType === 1 ? range.commonAncestorContainer : range.commonAncestorContainer.parentElement;
+
+    if (!element) {
+      return false;
+    }
+
+    const appliedStyles = window.getComputedStyle(element);
+
+    switch (style) {
+      case 'bold':
+        return appliedStyles.fontWeight === '600';
+      case 'italic':
+        return appliedStyles.fontStyle === 'italic';
+      case 'underline':
+        return appliedStyles.textDecoration.includes('underline');
+      case 'strike':
+        return appliedStyles.textDecoration.includes('line-through');
+      case 'ordered-list':
+        return appliedStyles.listStyle.includes('decimal');
+      case 'bullet-list':
+        return appliedStyles.listStyle.includes('•  ');
+      default:
+        return false;
+    }
+  };
+
+  const handleStyles = (styleId) => {
+    const selection = window.getSelection();
+    const range = selection.getRangeAt(0);
+
+    const selectedText = range.toString();
+
+    const currentStyles = {
+      bold: isStyleApplied('bold', range),
+      italic: isStyleApplied('italic', range),
+      underline: isStyleApplied('underline', range),
+      color: isStyleApplied('color', range),
+      strike: isStyleApplied('strike', range),
+      ordered_list: isStyleApplied('ordered-list', range),
+      bullet_list: isStyleApplied('bullet-list', range)
+    };
+
+    switch (styleId) {
+      case 1:
+        currentStyles.bold = !currentStyles.bold;
+        break;
+      case 2:
+        currentStyles.italic = !currentStyles.italic;
+        break;
+      case 3:
+        currentStyles.underline = !currentStyles.underline;
+        break;
+      case 4:
+        currentStyles.strike = !currentStyles.strike;
+        break;
+      case 5:
+        currentStyles.ordered_list = !currentStyles.ordered_list;
+        break;
+      case 6:
+        currentStyles.bullet_list = !currentStyles.bullet_list;
+        break;
+      default:
+        console.log('No se ha encontrado el botón');
+        return;
+    }
+
+    let newContent = selectedText;
+
+    if (currentStyles.underline) {
+      newContent = `<u>${newContent}</u>`;
+    }
+    if (currentStyles.strike) {
+      newContent = `<s>${newContent}</s>`;
+    }
+    if (currentStyles.bold) {
+      newContent = `<strong>${newContent}</strong>`;
+    }
+    if (currentStyles.italic) {
+      newContent = `<em>${newContent}</em>`;
+    }
+    if (currentStyles.ordered_list) {
+      newContent = `<ol><li>${newContent}</li></ol>`;
+    }
+    if (currentStyles.bullet_list) {
+      newContent = `<ul><li>${newContent}</li></ul>`;
+    }
+
+    document.execCommand('insertHTML', false, newContent);
+  };
+
+  const handleOptions = (optionId) => {
+    if (optionId === 1) {
+      if (addReminder) {
+        setAddReminder(false);
+      } else {
+        setAddReminder(true);
+      }
+    } else if (optionId === 2) {
+      if (selectColor) {
+        setSelectColor(false);
+      } else {
+        setSelectColor(true);
+      }
+    }
+  }
+
   const onSubmit = async (data) => {
-    data.note_content = content
     try {
+      data.note_content = state
       await createNote(boardId, data);
-      setContent('');
       setIsMounted(false);
       reset();
       getNotes(boardId);
+      handleReset(init);
+      setPlaceholder(true);
     } catch (error) {
       console.error('Error al crear la nota:', error);
     }
@@ -97,14 +239,38 @@ export function CreateNote({ boardId, isMounted, setIsMounted, createNoteForm, s
           <section className='relative w-[300px]'>
             <form onSubmit={handleSubmit(onSubmit)} className='relative'>
               <div id='title' className='px-[20px] py-[10px]'>
-                <input type="text" placeholder='Título' autoComplete='off' className='text-[15px] text-[#202524] outline-none w-full overflow-none whitespace-normal' style={{ overflowWrap: 'break-word' }} {...register('note_title')} />
+                <input type="text" placeholder='Título' autoComplete='off' className='text-[#202520] outline-none w-full overflow-none whitespace-normal text-wrap' {...register('note_title')} />
               </div>
-              <ReactQuill theme='snow' formats={formats} modules={modules} value={content} onChange={setContent} placeholder='Escribe tu nota aquí...' />
-              <div id="options" className='flex justify-between items-center px-[20px] pb-[5px] overflow-hidden'>
+              <div className={`${placeholder ? 'absolute w-full text-[#a9a9a9] pointer-events-none px-[20px] py-[10px]' : 'hidden'}`}>
+                Escribe tu nota aquí...
+              </div>
+              <div
+                id='editor'
+                ref={editorRef}
+                className={`px-[20px] py-[10px] w-full h-[320px] outline-none text-[#202520] whitespace-pre-wrap break-words overflow-auto`}
+                contentEditable={true}
+                aria-multiline
+                tabIndex={0}
+                role='textbox'
+                dangerouslySetInnerHTML={{ __html: state }}
+                onInput={handleContentChange}
+                spellCheck
+              />
+              <div id='styles' className='flex justify-between items-center px-[20px] overflow-hidden'>
+                {styles.map(style => (
+                  <button type='button' key={style.id} data-tooltip-id='style-tooltip' data-tooltip-content={style.alt} onClick={() => handleStyles(style.id)} className={`rounded p-[5px] transition-all duration-200 hover:bg-[#c9c9c9]`}>
+                    <span className='text-[#202520]' aria-label={style.alt}>
+                      {style.icon.default}
+                    </span>
+                  </button>
+                ))}
+                <Tooltip id='style-tooltip' effect="solid" place="bottom" />
+              </div>
+              <div id="options" className='flex justify-between items-center px-[20px] py-[5px] overflow-hidden'>
                 {options.slice(0, 6).map(option => (
                   option.id !== 4 && (
-                    <button type='button' key={option.id} className='rounded transition duration-100 hover:bg-[#c9c9c9] p-[5px]'>
-                      <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
+                    <button type='button' key={option.id} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt} onClick={(option.id === 5 ? () => handleUndo() : option.id === 6 ? () => handleRedo() : null)} className={`rounded p-[5px] ${((option.id === 5 && !canUndo) || (option.id === 6 && !canRedo)) ? 'opacity-[0.5] cursor-not-allowed' : 'transition duration-100 hover:bg-[#c9c9c9]'}`} disabled={(option.id === 5 && !canUndo) || (option.id === 6 && !canRedo)}>
+                      <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
                         {option.icon.default}
                       </span>
                     </button>
@@ -119,13 +285,15 @@ export function CreateNote({ boardId, isMounted, setIsMounted, createNoteForm, s
               </div>
             </form>
           </section>
+          {/* <Reminder addReminder={addReminder} setAddReminder={setAddReminder} boardId={boardId} />
+          <ColorPicker selectColor={selectColor} setSelectColor={setSelectColor} /> */}
         </div>
       )}
     </>
   )
 }
 
-function NotesGrid({ boardId, editNote, editNoteForm, handleArchiveNote, handleDeleteNote, setMessage, previousNote, setPreviousNote }) {
+function NotesGrid({ boardId, editNote, editNoteForm, handleArchiveNote, handleDeleteNote, setMessage }) {
 
   const { notes, setNotes, getNotes } = useNote();
 
@@ -205,7 +373,7 @@ function NotesGrid({ boardId, editNote, editNoteForm, handleArchiveNote, handleD
   )
 }
 
-function NotesContent({ boardId, boardName, message, setMessage }) {
+function Notes({ boardId, boardName, message, setMessage }) {
 
   const { getNote, getNotes, archiveNote, sendNoteToBin } = useNote();
 
@@ -267,4 +435,4 @@ function NotesContent({ boardId, boardName, message, setMessage }) {
   )
 }
 
-export default NotesContent
+export default Notes

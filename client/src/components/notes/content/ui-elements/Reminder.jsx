@@ -2,43 +2,34 @@ import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { useNote } from '../../../../hooks/useNote';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
 import { MdArrowDropDown } from "react-icons/md";
 
 export default function Reminder({ addReminder, setAddReminder, noteRef, note, boardId }) {
 
+  const reminderRef = useRef(null);
+  const [noteCard, setNoteCard] = useState(null);
+  const [datePicker, setDatePicker] = useState(false);
+
   const { register, handleSubmit } = useForm();
 
-  const options = {
+  const dateOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   };
 
-  const [noteCard, setNoteCard] = useState(null);
-  const [date, setDate] = useState(new Date().toLocaleDateString('es-ES', options));
-  const [time, setTime] = useState(new Date().toLocaleTimeString('es-ES', { hour: 'numeric', minute: 'numeric' }));
+  const timeOptions = {
+    hour: 'numeric',
+    minute: 'numeric'
+  }
+
+  const [date, setDate] = useState(new Date().toLocaleDateString('es-ES', dateOptions));
+  const [time, setTime] = useState(new Date().toLocaleTimeString('es-ES', timeOptions));
 
   const { getNotes, setReminder } = useNote();
-
-  const reminderRef = useRef(null);
-
-  const handleOutsideClick = (e) => {
-    const isAddReminderButtonClicked = noteRef.current.contains(e.target.closest("#options button[data-option-id='1']"));
-    if (!isAddReminderButtonClicked && reminderRef.current && !reminderRef.current.contains(e.target)) {
-      setAddReminder(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [setAddReminder]);
 
   useEffect(() => {
     function updateNoteCardPosition() {
@@ -55,7 +46,23 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
     return () => {
       window.removeEventListener('resize', updateNoteCardPosition);
     };
-  }, [noteRef]);
+  }, [noteRef.current]);
+
+  const handleOutsideClick = (e) => {
+    const isAddReminderButtonClicked = noteRef.current.contains(e.target.closest("#options button[data-option-id='1']"));
+    const clickedOutsideReminder = reminderRef.current && !reminderRef.current.contains(e.target);
+    if (!isAddReminderButtonClicked && clickedOutsideReminder) {
+      setAddReminder(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [setAddReminder]);
 
   if (!noteRef.current) return null;
   const ADD_REMINDER_DISPLAY = {
@@ -70,11 +77,12 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
 
   const onSubmit = async (data) => {
     try {
-      const dateTime = moment(`${data.date} ${data.time}`).format('YYYY-MM-DD HH:mm:ss');
-      await setReminder(boardId, { ...note, reminder: dateTime });
+      const dateTime = data.date && data.time ? moment(`${data.date} ${data.time}`).format('YYYY-MM-DD HH:mm:ss') : null;
+      if (dateTime) {
+        await setReminder(boardId, { ...note, reminder: dateTime });
+        getNotes(boardId);
+      }
       setAddReminder(false);
-      getNotes(boardId);
-      console.log(`${data.date} ${data.time}`)
     } catch (error) {
       console.error(error);
     }
@@ -101,7 +109,7 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
               onChange={(e) => setDate(e.target.value)}
               className='w-full text-[#202520] bg-[#eee] text-[14px] outline-none border border-b-solid bottom-color'
             />
-            <div role='button' className='absolute inline-block right-0 w-[24px] h-[24px]'>
+            <div role='button' onClick={() => setDatePicker(!datePicker)} className='absolute inline-block right-0 w-[24px] h-[24px]'>
               <MdArrowDropDown className='text-[#202520] text-[18px] m-auto' />
             </div>
           </div>
@@ -122,6 +130,7 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
         <div className='mt-[15px] mb-[7px]'>
           <button type='submit' className='px-[7px] py-[3px] text-[14px] text-[#202524] bg-[#98ff98] rounded-md font-medium transition duration-150 hover:bg-[#78ff78]'>Agregar</button>
         </div>
+        <Calendar className={`text-[#202520] absolute top-[92px] left-0 right-0 scale-90 ${datePicker ? 'visible' : 'invisible'}`} value={date} />
       </form>
     </div>,
     document.body

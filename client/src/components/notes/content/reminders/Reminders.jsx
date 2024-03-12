@@ -28,7 +28,7 @@ function RemindersGrid({ boardId, editNote, handleArchiveNote, handleDeleteNote,
     getNotes(boardId);
   }, [boardId]);
 
-  const filteredNotes = notes.filter(note => note.reminder && !note.in_bin && !note.is_archived);
+  const filteredNotes = notes.filter(note => note.reminder && !note.in_bin);
 
   const handleDragStart = (note) => {
     setDraggedNote(note)

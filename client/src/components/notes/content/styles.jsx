@@ -27,14 +27,6 @@ export const styles = [
     },
     {
         id: 4,
-        name: 'color',
-        icon: {
-            default: <MdFormatColorText />
-        },
-        alt: 'Color del texto'
-    },
-    {
-        id: 5,
         name: 'strike',
         icon: {
             default: <MdFormatStrikethrough />
@@ -42,29 +34,19 @@ export const styles = [
         alt: 'Tachar'
     },
     {
-        id: 6,
-        name: 'list',
-        type: 'ordered',
+        id: 5,
+        name: 'ordered-list',
         icon: {
             default: <MdFormatListNumbered />
         },
-        alt: 'Lista numerada'
+        alt: 'Lista ordenada'
     },
     {
-        id: 7,
-        name: 'list',
-        type: 'bullet',
+        id: 6,
+        name: 'bullet-list',
         icon: {
             default: <MdFormatListBulleted />
         },
         alt: 'Lista con viñetas'
-    },
-    {
-        id: 8,
-        name: 'link',
-        icon: {
-            default: <MdAddLink />
-        },
-        alt: 'Añadir enlace'
     }
 ]
