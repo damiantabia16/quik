@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useForm } from 'react-hook-form';
-import { useNote } from '../../../../hooks/useNote';
+import { useNote } from '../../../../../hooks/useNote';
+import './reminder.css'
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment';
 import { MdArrowDropDown } from "react-icons/md";
+import { Button } from '../../../../ui/button/Button';
 
-export default function Reminder({ addReminder, setAddReminder, noteRef, note, boardId }) {
+export default function Reminder({ addReminder, setAddReminder, noteRef, formRef, note, boardId }) {
 
   const reminderRef = useRef(null);
   const [noteCard, setNoteCard] = useState(null);
@@ -33,7 +35,11 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
 
   useEffect(() => {
     function updateNoteCardPosition() {
-      if (noteRef.current) {
+      if (formRef?.current) {
+        const newNoteCard = formRef.current.getBoundingClientRect();
+        setNoteCard(newNoteCard);
+      }
+      if (noteRef?.current) {
         const newNoteCard = noteRef.current.getBoundingClientRect();
         setNoteCard(newNoteCard);
       }
@@ -41,15 +47,19 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
 
     updateNoteCardPosition();
 
-    window.addEventListener('resize', updateNoteCardPosition);
+    const handleResize = () => {
+      updateNoteCardPosition();
+    };
+
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener('resize', updateNoteCardPosition);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [noteRef.current]);
+  }, [formRef, noteRef?.current]);
 
   const handleOutsideClick = (e) => {
-    const isAddReminderButtonClicked = noteRef.current.contains(e.target.closest("#options button[data-option-id='1']"));
+    const isAddReminderButtonClicked = formRef?.current?.contains(e.target.closest("#add-note-options button[data-option-id='1']")) || noteRef?.current?.contains(e.target.closest("#options button[data-option-id='1']"));
     const clickedOutsideReminder = reminderRef.current && !reminderRef.current.contains(e.target);
     if (!isAddReminderButtonClicked && clickedOutsideReminder) {
       setAddReminder(false);
@@ -62,17 +72,28 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [setAddReminder]);
+  }, [formRef, noteRef, setAddReminder]);
 
-  if (!noteRef.current) return null;
-  const ADD_REMINDER_DISPLAY = {
-    top: noteCard ? noteCard.bottom + - 6 + 'px' : 'auto',
-    left: noteCard ? noteCard.left + 'px' : 'auto',
-    animation: 'displayUi 0.2s',
-  };
-  const ADD_REMINDER_HIDE = {
-    animation: 'hideUi 0.2s',
-    animationFillMode: 'forwards'
+  if (!addReminder) return null;
+
+  let addReminderPosition;
+  if (formRef) {
+    addReminderPosition = {
+      position: 'fixed',
+      top: noteCard ? noteCard.top - 355 + 'px' : 'auto',
+      left: noteCard ? noteCard.left + 'px' : 'auto',
+      zIndex: '999',
+      animation: 'displayUi 0.2s'
+    }
+  } else if (noteRef?.current) {
+    addReminderPosition = {
+      position: 'absolute',
+      top: noteCard ? noteCard.bottom - 6 + 'px' : 'auto',
+      left: noteCard ? noteCard.left + 'px' : 'auto',
+      animation: 'displayUi 0.2s'
+    }
+  } else {
+    return null;
   }
 
   const onSubmit = async (data) => {
@@ -91,15 +112,13 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
   if (!addReminder) return null;
 
   return ReactDOM.createPortal(
-    <div ref={reminderRef} id='add-reminder' className={`${addReminder ? 'absolute p-[20px] mr-[20px] rounded bg-[#eee]' : 'hidden'}`} style={addReminder ? ADD_REMINDER_DISPLAY : ADD_REMINDER_HIDE}>
-      <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col items-start'>
-        <div className='mb-[8px] relative w-full'>
-          <div>
-            <label htmlFor='reminder' className='text-[#202520] font-medium'>Recordatorio:</label>
-          </div>
-          <div className='mt-[15px]'>
-            <div>
-              <label htmlFor="date" className='text-[#202520] text-[14px]'>Fecha</label>
+    <div ref={reminderRef} id='add-reminder' className={`${addReminder ? 'add-reminder' : 'hidden'}`} style={addReminder ? addReminderPosition : null}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className='reminder-form'>
+          <div className='reminder-title'>Recordatorio:</div>
+          <div className='date-container'>
+            <div className='date-label'>
+              <label htmlFor="date">Fecha</label>
             </div>
             <input
               type="text"
@@ -107,15 +126,14 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
               value={date}
               {...register('date')}
               onChange={(e) => setDate(e.target.value)}
-              className='w-full text-[#202520] bg-[#eee] text-[14px] outline-none border border-b-solid bottom-color'
             />
-            <div role='button' onClick={() => setDatePicker(!datePicker)} className='absolute inline-block right-0 w-[24px] h-[24px]'>
-              <MdArrowDropDown className='text-[#202520] text-[18px] m-auto' />
+            <div role='button' onClick={() => setDatePicker(!datePicker)}>
+              <MdArrowDropDown />
             </div>
           </div>
-          <div className='mt-[15px]'>
-            <div>
-              <label htmlFor="time" className='text-[#202520] text-[14px]'>Hora</label>
+          <div className='time-container'>
+            <div className='time-label'>
+              <label htmlFor="time">Hora</label>
             </div>
             <input
               type="text"
@@ -123,14 +141,13 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, note, b
               value={time}
               {...register('time')}
               onChange={(e) => setTime(e.target.value)}
-              className='w-full text-[#202520] bg-[#eee] text-[14px] outline-none border border-b-solid bottom-color'
             />
           </div>
         </div>
-        <div className='mt-[15px] mb-[7px]'>
-          <button type='submit' className='px-[7px] py-[3px] text-[14px] text-[#202524] bg-[#98ff98] rounded-md font-medium transition duration-150 hover:bg-[#78ff78]'>Agregar</button>
+        <div className='set-reminder-button'>
+          <Button size='sm'>Agregar</Button>
         </div>
-        <Calendar className={`text-[#202520] absolute top-[92px] left-0 right-0 scale-90 ${datePicker ? 'visible' : 'invisible'}`} value={date} />
+        <Calendar className={`calendar ${datePicker ? 'visible' : 'invisible'}`} value={date} />
       </form>
     </div>,
     document.body

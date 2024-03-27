@@ -1,0 +1,61 @@
+@import '/src/index.css';
+
+.note-box {
+    padding-inline: 20px;
+}
+
+.note-container {
+    width: 325px;
+    border-radius: 4px;
+}
+
+.note-container.conditional-background {
+    background-color: #eee;
+}
+
+.note-title-container {
+    padding: 20px;
+}
+
+.note-title-container input {
+    width: 100%;
+    outline: none;
+    overflow: none;
+    color: var(--primary-color);
+    background-color: transparent;
+    white-space: normal;
+    text-wrap: wrap;
+}
+
+#note-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+#note-options .options-button {
+    border-radius: 4px;
+    padding: 5px;
+    transition: all 0.2 ease-in-out;
+}
+
+#note-options .options-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#note-options .options-button:hover:not(.disabled) {
+    background-color: rgba(95, 99, 104, 0.3);
+}
+
+#note-options .options-button span {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+@media (min-width: 480px) {
+    .note-box {
+        padding-inline: 0;
+    }
+}

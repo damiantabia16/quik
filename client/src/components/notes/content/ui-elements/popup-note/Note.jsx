@@ -2,15 +2,14 @@ import { useEffect, useState, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { useForm } from 'react-hook-form';
 import { Tooltip } from 'react-tooltip';
-import { options } from '../options';
-import { styles } from '../styles';
-import '../custom-toolbar.css';
-import "react-quill/dist/quill.snow.css";
-import { useNote } from '../../../../hooks/useNote';
+import { options } from '../../options';
+import { styles } from '../../styles';
+import './note.css';
+import '../../custom-toolbar.css';
+import { useNote } from '../../../../../hooks/useNote';
+import { Button } from '../../../../ui/button/Button';
 import { MdOutlineWatchLater, MdClose } from "react-icons/md";
-import Reminder from '../ui-elements/Reminder';
-import ColorPicker from '../ui-elements/ColorPicker';
-import useUndoRedo from '../../../../hooks/useUndoRedo';
+import useUndoRedo from '../../../../../hooks/useUndoRedo';
 
 export default function Note({ boardId, isMounted, setIsMounted, editNoteForm, setEditNoteForm, closeEditNote, handleArchiveNote, handleDeleteNote }) {
 
@@ -94,7 +93,7 @@ export default function Note({ boardId, isMounted, setIsMounted, editNoteForm, s
         setState(editorContent);
         setPlaceholder(editorContent.length === 0);
     };
-    
+
     const undo = () => {
         setValue('note_content', states[Math.max(0, index - 1)]);
         handleUndo();
@@ -227,55 +226,62 @@ export default function Note({ boardId, isMounted, setIsMounted, editNoteForm, s
         <>
             {editNoteForm && (
                 <>
-                    <div className={`fixed w-screen h-screen top-0 bottom-0 left-0 right-0 bg-[#00000070] overflow-hidden transition-opacity duration-100`} style={isMounted ? mountedStyle : unmountedStyle} />
-                    <section className='fixed px-[20px] min-[480px]:px-0 flex justify-center items-center w-full h-full left-0 right-0 bottom-0 top-0 transition-opacity duration-100' style={isMounted ? mountedStyle : unmountedStyle}>
-                        <div ref={noteRef} className={`w-[325px] rounded close-shadow ${note.background_color === 'transparent' ? 'bg-[#eee]' : ''}`} style={{ backgroundColor: backgroundColor }}>
-                            <div>
-                                <form onSubmit={handleSubmit(onSubmit)}>
-                                    <div className='p-[20px]'>
-                                        <input type="text" {...register('note_title')} placeholder={note.note_title ? '' : 'Título'} autoComplete='off' className='text-[#202520] outline-none w-full overflow-none whitespace-normal bg-transparent' />
-                                    </div>
-                                    {/* <ReactQuill theme='snow' formats={formats} modules={modules} value={note.note_content} onChange={(value) => setValue('note_content', value)} /> */}
-                                    <div className={`${placeholder && !state ? 'absolute w-full text-[#a9a9a9] pointer-events-none px-[20px] py-[10px]' : 'hidden'}`}>
-                                        Escribe tu nota aquí...
-                                    </div>
-                                    <div
-                                        id='editor'
-                                        ref={editorRef}
-                                        className={`px-[20px] py-[10px] w-full h-[320px] outline-none text-[#202520] whitespace-pre-wrap break-words overflow-auto`}
-                                        contentEditable={true}
-                                        aria-multiline
-                                        tabIndex={0}
-                                        role='textbox'
-                                        dangerouslySetInnerHTML={{ __html: state }}
-                                        onInput={handleContentChange}
-                                        spellCheck
-                                    />
-                                    <div id='styles' className='flex justify-between items-center px-[20px] overflow-hidden'>
-                                        {styles.map(style => (
-                                            <button type='button' key={style.id} onClick={() => handleStyles(style.id)} className={`rounded p-[5px] transition-all duration-200 hover:bg-[#c9c9c9]`}>
-                                                <span className='text-[#202520]' aria-label={style.alt} data-tooltip-id='style-tooltip' data-tooltip-content={style.alt}>
-                                                    {style.icon.default}
+                    <div className='overlay' style={isMounted ? mountedStyle : unmountedStyle} />
+                    <section className='note-box box' style={isMounted ? mountedStyle : unmountedStyle}>
+                        <div ref={noteRef} className={`note-container close-shadow ${note.background_color === 'transparent' ? 'conditional-background' : ''}`} style={{ backgroundColor: backgroundColor }}>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <div className='note-title-container'>
+                                    <input type="text" {...register('note_title')} placeholder={note.note_title ? '' : 'Título'} autoComplete='off' />
+                                </div>
+                                <div className={`${placeholder && !state ? 'editor-placeholder' : 'hidden'}`}>
+                                    Escribe tu nota aquí...
+                                </div>
+                                <div
+                                    id='editor'
+                                    ref={editorRef}
+                                    contentEditable={true}
+                                    aria-multiline
+                                    tabIndex={0}
+                                    role='textbox'
+                                    dangerouslySetInnerHTML={{ __html: state }}
+                                    onInput={handleContentChange}
+                                    spellCheck
+                                />
+                                <div id='styles'>
+                                    {styles.map(style => (
+                                        <button
+                                            type='button'
+                                            key={style.id}
+                                            onClick={() => handleStyles(style.id)}
+                                            className='styles-button'>
+                                            <span aria-label={style.alt} data-tooltip-id='style-tooltip' data-tooltip-content={style.alt}>
+                                                {style.icon.default}
+                                            </span>
+                                        </button>
+                                    ))}
+                                    <Tooltip id='style-tooltip' effect="solid" place="bottom" />
+                                </div>
+                                <div id="note-options">
+                                    {options
+                                        .filter(option => option.id === 5 || option.id === 6)
+                                        .map(option => (
+                                            <button
+                                                type='button'
+                                                key={option.id}
+                                                onClick={(option.id === 5 ? () => undo() : option.id === 6 ? () => redo() : null)}
+                                                className={`options-button ${((option.id === 5 && !canUndo) || (option.id === 6 && !canRedo)) ? 'disabled' : ''}`} disabled={(option.id === 5 && !canUndo) || (option.id === 6 && !canRedo)}>
+                                                <span
+                                                    aria-label={option.alt}
+                                                    data-tooltip-id='option-tooltip'
+                                                    data-tooltip-content={option.alt}>
+                                                    {option.icon.default}
                                                 </span>
                                             </button>
                                         ))}
-                                        <Tooltip id='style-tooltip' effect="solid" place="bottom" />
-                                    </div>
-                                    <div id="options" className='flex justify-between items-center p-[20px]'>
-                                        {options
-                                            .filter(option => option.id === 5 || option.id === 6)
-                                            .map(option => (
-                                                <button type='button' key={option.id} onClick={(option.id === 5 ? () => undo() : option.id === 6 ? () => redo() : null)} className={`rounded p-[5px] ${((option.id === 5 && !canUndo) || (option.id === 6 && !canRedo)) ? 'opacity-[0.5] cursor-not-allowed' : 'transition duration-100 hover:bg-[#c9c9c9]'}`} disabled={(option.id === 5 && !canUndo) || (option.id === 6 && !canRedo)}>
-                                                    <span className='text-[#202520] text-[20px]' aria-label={option.alt} data-tooltip-id='option-tooltip' data-tooltip-content={option.alt}>
-                                                        {option.icon.default}
-                                                    </span>
-                                                </button>
-                                            ))}
-                                        <Tooltip id='option-tooltip' effect="solid" place="bottom" />
-                                        <button type='submit' className='text-[#202520] py-[8px] px-[24px] transition duration-150 hover:bg-[#98ff98] rounded-md font-medium'>Guardar</button>
-                                    </div>
-                                </form>
-                            </div>
+                                    <Tooltip id='option-tooltip' effect="solid" place="bottom" />
+                                    <Button variant='transparent'>Guardar</Button>
+                                </div>
+                            </form>
                         </div>
                     </section>
                 </>

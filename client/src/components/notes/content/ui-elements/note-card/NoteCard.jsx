@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip';
-import { options } from '../options';
-import { useNote } from '../../../../hooks/useNote';
+import { options } from '../../options';
+import { useNote } from '../../../../../hooks/useNote';
+import './note-card.css';
 import Parser from 'html-react-parser';
-import Reminder from './Reminder';
-import ColorPicker from './ColorPicker';
-import ConfirmDelete from './ConfirmDelete';
-import { MdOutlineWatchLater, MdClose } from "react-icons/md";
+import Reminder from '../reminder/Reminder';
+import ColorPicker from '../color-picker/ColorPicker';
+import ConfirmDelete from '../confirm-delete/ConfirmDelete';
+import { MdCheckCircle, MdOutlineWatchLater, MdClose } from "react-icons/md";
 
 export default function NoteCard({
     note,
@@ -16,8 +17,11 @@ export default function NoteCard({
     setDraggedNote,
     onDrop,
     editNote,
+    selectedNotes,
+    setSelectedNotes,
     handleArchiveNote,
     handleUnarchiveNote,
+    handleSendNoteToBin,
     handleDeleteNote,
     handleRestoreNote,
     setMessage
@@ -29,6 +33,8 @@ export default function NoteCard({
 
     const [hover, setHover] = useState(false);
     const [dateHover, setDateHover] = useState(false);
+
+    const [selectedNote, setSelectedNote] = useState(false);
 
     const [isDragging, setIsDragging] = useState(false);
 
@@ -71,6 +77,23 @@ export default function NoteCard({
         setConfirmDelete(false)
     }
 
+    const handleSelection = () => {
+        setSelectedNote(!selectedNote);
+        setSelectedNotes(prevSelectedNotes => {
+            if (selectedNote) {
+                return prevSelectedNotes.filter(id => id !== note.id);
+            } else {
+                return [...prevSelectedNotes, note.id];
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (selectedNotes.length === 0) {
+            setSelectedNote(false)
+        }
+    }, [selectedNotes]);
+
     const handleButtons = (optionId, noteId) => {
         if (optionId === 1) {
             if (addReminder) {
@@ -109,7 +132,7 @@ export default function NoteCard({
                 setMessage('');
             }, 7000);
             setTimeout(() => {
-                handleDeleteNote(noteId);
+                handleSendNoteToBin(noteId);
             }, 200);
         } else if (optionId === 8) {
             setConfirmDelete(true)
@@ -169,44 +192,57 @@ export default function NoteCard({
     };
 
     return (
-        <div className='select-none mb-[8px] px-[10px] relative'>
+        <div className='note-card-container'>
             <div
                 ref={noteRef}
-                draggable
+                onClick={() => {if (selectedNotes.length > 0) handleSelection()}}
+                draggable={!window.location.pathname.includes(`/tableros/${boardId}/papelera`)}
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragEnd={handleDragEnd}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
-                className={`relative text-[#202520] rounded draggable-note
-                ${isFadingOut ? 'fade-out' : 'opacity-transition'}`}
+                className={`note-card ${isFadingOut ? 'fade-out' : ''} ${selectedNote ? 'selected' : ''}`}
                 style={cardStyle}>
-                <div onClick={() => handleEditNote(note.id)} className='min-h-[60px]'>
+                <div
+                    role='button'
+                    onClick={(e) => {e.stopPropagation(); handleSelection()}}
+                    className={`select-note ${hover ? 'active' : ''} ${selectedNote ? 'is-selected' : ''}`}
+                    data-tooltip-id='select-note-tooltip'
+                    data-tooltip-content='Seleccionar nota'>
+                    <MdCheckCircle />
+                    <Tooltip id='select-note-tooltip' effect="solid" place="bottom" />
+                </div>
+                <div onClick={() => {if (selectedNotes.length === 0) handleEditNote(note.id)}} className='note-card-content'>
                     {!note.note_title && !note.note_content ? (
-                        <div className='py-[12px] px-[16px]'>
-                            <p className='text-[20px] text-[#505550]'>Nota vacía</p>
+                        <div className='note-card-title'>
+                            <p>Nota vacía</p>
                         </div>
                     ) : (
                         <>
                             {note && note.note_title ? (
-                                <div className='pt-[12px] px-[16px]'>
-                                    <h3 className='font-semibold'>{note.note_title}</h3>
+                                <div className='note-card-title'>
+                                    <h3>{note.note_title}</h3>
                                 </div>
                             ) : ('')}
-                            <div className='py-[12px] px-[16px]'>
-                                <span className='text-[.875rem]' style={{ whiteSpace: 'pre-line' }}>{truncateText(note.note_content, 500)}</span>
+                            <div className='note-card-description'>
+                                <span style={{ whiteSpace: 'pre-line' }}>{truncateText(note.note_content, 500)}</span>
                             </div>
                             {note.reminder ? (
-                                <div role='button' className='relative text-[#404540] pt-[12px] pb-[6px] px-[16px] flex items-center w-fit' onMouseEnter={() => setDateHover(true)} onMouseLeave={() => setDateHover(false)}>
-                                    <MdOutlineWatchLater className='mr-[5px]' />
-                                    <label className='cursor-pointer text-[.7rem] mr-[5px]'>
+                                <div
+                                    role='button'
+                                    className='note-card-reminder'
+                                    onMouseEnter={() => setDateHover(true)}
+                                    onMouseLeave={() => setDateHover(false)}>
+                                    <MdOutlineWatchLater className='watch' />
+                                    <label>
                                         {formatReminderDate(note.reminder)}
                                     </label>
                                     {dateHover ? (
                                         <>
-                                            <div role='button' onClick={handleDeleteReminder} className='absolute right-0 option-hover rounded-full w-[16px] h-[16px]'>
-                                                <MdClose data-tooltip-id='delete-reminder-tooltip' data-tooltip-content='Eliminar recordatorio' className='text-[.875rem] m-auto h-full' />
+                                            <div role='button' onClick={handleDeleteReminder} className='delete-reminder option-hover'>
+                                                <MdClose data-tooltip-id='delete-reminder-tooltip' data-tooltip-content='Eliminar recordatorio' />
                                             </div>
                                             <Tooltip id='delete-reminder-tooltip' effect="solid" place="bottom" />
                                         </>
@@ -216,9 +252,9 @@ export default function NoteCard({
                         </>
                     )}
                 </div>
-                <div id="options" className={`flex ${window.location.pathname === `/tableros/${boardId}/papelera` ? 'justify-end' : 'justify-between'} p-[15px] ${hover ? 'visible opacity-100' : 'invisible opacity-0'} transition duration-200`}>
+                <div id="options" className={`${window.location.pathname === `/tableros/${boardId}/papelera` ? 'in-bin' : 'out-bin'} ${hover && selectedNotes.length === 0 ? 'is-visible' : 'not-visible'} ${selectedNote ? 'is-selected' : ''}`}>
                     {options.map(option => {
-                        if (window.location.pathname === `/tableros/${boardId}`) {
+                        if (window.location.pathname === `/tableros/${boardId}/notas`) {
                             if ([1, 2, 3, 7].includes(option.id)) {
                                 return (
                                     <button
@@ -227,9 +263,9 @@ export default function NoteCard({
                                         data-tooltip-id='option-tooltip'
                                         data-tooltip-content={option.alt}
                                         onClick={() => handleButtons(option.id, note.id)}
-                                        className={`rounded transition duration-200 option-hover p-[5px]`}
+                                        className='option-hover'
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
+                                        <span aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -244,9 +280,9 @@ export default function NoteCard({
                                         data-tooltip-id='option-tooltip'
                                         data-tooltip-content={option.alt}
                                         onClick={() => handleButtons(option.id, note.id)}
-                                        className={`rounded transition duration-200 option-hover p-[5px]`}
+                                        className='option-hover'
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
+                                        <span aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -261,9 +297,9 @@ export default function NoteCard({
                                         onClick={() => handleButtons(option.id, note.id)}
                                         data-tooltip-id='option-tooltip'
                                         data-tooltip-content={option.alt}
-                                        className={`rounded transition duration-200 option-hover p-[5px]`}
+                                        className='option-hover'
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
+                                        <span aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -278,9 +314,9 @@ export default function NoteCard({
                                         onClick={() => handleButtons(option.id, note.id)}
                                         data-tooltip-id='option-tooltip'
                                         data-tooltip-content={option.alt}
-                                        className={`rounded transition duration-200 option-hover p-[5px]`}
+                                        className='option-hover'
                                     >
-                                        <span className='text-[#202520] text-[20px]' aria-label={option.alt}>
+                                        <span aria-label={option.alt}>
                                             {option.icon.default}
                                         </span>
                                     </button>
@@ -292,9 +328,22 @@ export default function NoteCard({
                     <Tooltip id='option-tooltip' effect="solid" place="bottom" />
                 </div>
             </div>
-            <Reminder addReminder={addReminder} setAddReminder={setAddReminder} noteRef={noteRef} note={note} boardId={boardId} />
-            <ColorPicker selectColor={selectColor} setSelectColor={setSelectColor} pickedColor={pickedColor} noteRef={noteRef} handlePickColor={handlePickColor} />
-            <ConfirmDelete confirmDelete={confirmDelete} handleConfirmDelete={handleConfirmDelete} handleCancelDelete={handleCancelDelete} />
+            <Reminder
+                addReminder={addReminder}
+                setAddReminder={setAddReminder}
+                noteRef={noteRef}
+                note={note}
+                boardId={boardId} />
+            <ColorPicker
+                selectColor={selectColor}
+                setSelectColor={setSelectColor}
+                pickedColor={pickedColor}
+                noteRef={noteRef}
+                handlePickColor={handlePickColor} />
+            <ConfirmDelete
+                confirmDelete={confirmDelete}
+                handleConfirmDelete={handleConfirmDelete}
+                handleCancelDelete={handleCancelDelete} />
         </div>
     )
 }

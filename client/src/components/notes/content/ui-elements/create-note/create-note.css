@@ -1,0 +1,76 @@
+@import '/src/index.css';
+
+.add-note-form-overlay {
+    position: fixed;
+    right: 30px;
+    bottom: 105px;
+    border-radius: 6px;
+    z-index: 999;
+}
+
+.add-note-form-container {
+    position: relative;
+    width: 300px;
+}
+
+.add-note-form-container form {
+    position: relative;
+}
+
+.title-container {
+    padding: 10px 20px;
+}
+
+.title-container input {
+    width: 100%;
+    outline: none;
+    overflow: none;
+    color: var(--primary-color);
+    background-color: transparent;
+    white-space: normal;
+    text-wrap: wrap;
+}
+
+div[role='textbox'] ul {
+    list-style: '•  ';
+    padding-left: 20px;
+}
+
+div[role='textbox'] ol {
+    list-style: decimal;
+    padding-left: 20px;
+}
+
+#add-note-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px 0 20px;
+    overflow: hidden;
+}
+
+#add-note-options .options-button {
+    border-radius: 4px;
+    padding: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+#add-note-options .options-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#add-note-options .options-button:hover:not(.disabled) {
+    background-color: rgba(95, 99, 104, 0.3);
+}
+
+#add-note-options .options-button span {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+#add-note-button {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}

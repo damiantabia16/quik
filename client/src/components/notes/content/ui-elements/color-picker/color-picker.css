@@ -1,0 +1,48 @@
+@import '/src/index.css';
+
+.color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 10px 20px;
+    margin-right: 20px;
+    background-color: #eee;
+    border-radius: 4px;
+}
+
+.color-container {
+    padding: 2px;
+}
+
+.color-container .color {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    cursor: pointer;
+}
+
+.picked {
+    position: absolute;
+    top: -20%;
+    right: -30%;
+    font-size: 20px;
+    line-height: 1.75rem;
+    color: #ff1493;
+    background-color: #eee;
+    border-radius: 9999px;
+}
+
+.transparent-icon {
+    position: absolute;
+    display: inline-block;
+    width: 20px;
+    height: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    color: var(--primary-color);
+    pointer-events: none;
+}

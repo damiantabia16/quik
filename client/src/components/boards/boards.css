@@ -1,0 +1,357 @@
+@import '/src/index.css';
+
+#boards-wrapper {
+    position: relative;
+    margin-top: 70px;
+}
+
+.boards-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+}
+
+.boards-container nav {
+    min-height: 100%;
+    z-index: 9998;
+}
+
+.boards-nav {
+    position: fixed;
+    min-width: 70px;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    margin-top: 70px;
+    transition: all 0.1s ease-in-out;
+}
+
+.boards-nav.active {
+    min-width: 280px;
+}
+
+.navigate-column-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    overflow: auto;
+}
+
+.navigate-column {
+    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.column {
+    padding-top: 12px;
+}
+
+.boards-clipboard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+    border-radius: 9999px;
+    margin-left: 10px;
+    cursor: default;
+    transition: all 0.1s ease-in-out;
+}
+
+.boards-clipboard.active {
+    width: 100%;
+    padding-left: 10px;
+    margin: 0;
+    border-radius: 0 25px 25px 0;
+}
+
+.boards-clipboard svg {
+    min-width: 25px;
+    min-height: 25px;
+    margin-inline: 12px;
+}
+
+.boards-clipboard p {
+    font-weight: 700;
+    margin-left: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#boards {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-top: 12px;
+    padding-left: 70px;
+    overflow-y: auto;
+}
+
+.boards {
+    position: relative;
+    width: 100%;
+    margin-top: 40px;
+}
+
+.boards ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.board-container {
+    position: relative;
+    width: 100%;
+    padding: 10px 20px;
+}
+
+.board {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.create-board {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #404540;
+    transition: all 0.2s ease-in-out;
+}
+
+.create-board:hover {
+    background-color: #505550;
+}
+
+.create-board p {
+    text-align: center;
+}
+
+.board-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.board-item #hover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: #0000004d;
+    border-radius: 4px;
+    opacity: 0;
+    transition: all 0.2s ease-in-out;
+}
+
+.board-item:hover #hover {
+    opacity: 1;
+}
+
+.board-item p {
+    font-weight: 700;
+    z-index: 1;
+}
+
+.create-board-form-container {
+    width: 320px;
+    height: auto;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+}
+
+.create-board-header {
+    position: relative;
+    display: grid;
+    grid-template-columns: 32px 1fr 32px;
+    align-items: center;
+    padding: 20px;
+    line-height: 40px;
+}
+
+.create-board-header h2 {
+    position: relative;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    grid-row-start: 1;
+    grid-column: 1 / span 3;
+    cursor: default;
+    white-space: nowrap;
+}
+
+.create-board-header button {
+    grid-row-start: 1;
+}
+
+.create-board-header button svg {
+    color: #505550;
+    transition: all 0.2s ease-in-out;
+}
+
+.create-board-header button svg:hover {
+    color: var(--secondary-color);
+}
+
+.form-container {
+    padding: 0 20px 20px 20px;
+}
+
+.board-name-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 8px;
+}
+
+.board-name-container label {
+    font-size: 14px;
+}
+
+.board-name-container input {
+    width: 100%;
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 4px 5px;
+    margin-top: 4px;
+    background-color: #404540;
+    outline: none;
+}
+
+.board-background-label {
+    padding-block: 4px;
+}
+
+.board-background-label span {
+    font-size: 14px;
+}
+
+.board-background-picker-container {
+    position: relative;
+}
+
+.board-background-picker {
+    display: flex;
+    justify-content: space-between;
+    column-gap: 8px;
+}
+
+.board-background-image-picker {
+    padding-bottom: 8px;
+}
+
+.background-image {
+    width: 64px;
+    height: 40px;
+}
+
+.background-color, .more-background-images-colors {
+    width: 40px;
+    height: 32px;
+}
+
+.picker {
+    position: relative;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.background-image-picker:hover {
+    filter: brightness(.5);
+}
+
+.background-image-picker.active {
+    filter: brightness(.5);
+}
+
+.background-color-picker:hover {
+    filter: brightness(.75);
+}
+
+.background-color-picker.active {
+    filter: brightness(.75);
+}
+
+.more-background-images-colors button {
+    width: 100%;
+    height: 100%;
+    color: #c6c6c6;
+    background-color: #A1BDD914;
+    border-radius: 4px;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.more-background-images-colors button:hover {
+    background-color: #454d45;
+}
+
+.background-example-container {
+    display: flex;
+    justify-content: center;
+    padding-block: 40px;
+}
+
+.background-example {
+    width: 200px;
+    height: 120px;
+    border-radius: 4px;
+}
+
+.background-example img {
+    width: 100%;
+    height: 100%;
+}
+
+.submit-form-button {
+    padding-bottom: 10px;
+}
+
+.submit-form-button button {
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+    border-radius: 4px;
+    padding-block: 6px;
+    text-align: center;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.submit-form-button button:hover {
+    background-color: var(--hover-color);
+}
+
+@media (min-width: 480px) {
+    .board-container {
+        width: 50%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .board-container {
+        width: 33.3%;
+    }
+}
+
+@media (min-width: 1536px) {
+    .board-container {
+        width: 25%;
+    }
+}

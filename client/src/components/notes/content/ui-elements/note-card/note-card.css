@@ -1,0 +1,168 @@
+@import '/src/index.css';
+
+.note-card-container {
+    position: relative;
+    margin: 10px;
+    user-select: none;
+}
+
+.note-card {
+    position: relative;
+    color: var(--primary-color);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
+    transition: all 0.2s ease-in-out;
+}
+
+.note-card ul {
+    padding-left: 15px;
+    list-style-type: '•  ';
+}
+
+.note-card ol {
+    padding-left: 15px;
+    list-style-type: decimal;
+}
+
+.note-card:hover {
+    box-shadow: 0 2px 10px 0 rgba(60, 64, 67, 0.302), 0 6px 10px 0 rgba(60, 64, 67, 0.149);
+}
+
+.note-card.fade-out {
+    opacity: 0;
+}
+
+.note-card.selected {
+    border: 1px solid var(--primary-color);
+}
+
+.select-note {
+    position: absolute;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    left: 0;
+    border-radius: 100%;
+    background-color: #eee;
+    z-index: 201;
+    opacity: 0;
+    transform: translate(-10px, -10px);
+    transition: all 0.2s ease-in-out;
+}
+
+.select-note svg {
+    width: 24px;
+    height: 24px;
+}
+
+.select-note.active {
+    opacity: 1;
+}
+
+.select-note.is-selected {
+    opacity: 1;
+}
+
+.note-card-content {
+    min-height: 60px;
+}
+
+.note-card-title {
+    padding: 12px 16px 0 16px;
+}
+
+.note-card-title p {
+    font-size: 20px;
+    color: #505550;
+}
+
+.note-card-title h3 {
+    font-weight: 600;
+}
+
+.note-card-description {
+    padding: 12px 16px;
+}
+
+.note-card-description span {
+    font-size: .875rem;
+}
+
+.note-card-reminder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    color: #404540;
+    padding: 12px 16px 6px 16px;
+}
+
+.note-card-reminder .watch {
+    margin-right: 5px;
+}
+
+.note-card-reminder label {
+    font-size: .7rem;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.delete-reminder {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 0;
+    border-radius: 9999px;
+    transition: all 0.2s ease-in-out;
+}
+
+.delete-reminder svg {
+    height: 100%;
+    font-size: .875rem;
+    margin: auto;
+}
+
+#options {
+    display: flex;
+    padding: 15px;
+    transition: all 0.2s ease-in-out;
+}
+
+#options.in-bin {
+    justify-content: flex-end;
+}
+
+#options.out-bin {
+    justify-content: space-between;
+}
+
+#options.is-visible {
+    visibility: visible;
+    opacity: 1;
+}
+
+#options.not-visible {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#options.is-selected {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#options button {
+    border-radius: 4px;
+    padding: 5px;
+    transition: all 0.2s ease-in-out;
+}
+
+#options button span {
+    font-size: 20px;
+    color: var(--primary-color);
+}
+
+.delete-reminder.option-hover:hover, #options button.option-hover:hover {
+    background-color: rgba(95, 99, 104, 0.3);
+}

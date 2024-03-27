@@ -1,0 +1,240 @@
+@import '/src/index.css';
+
+.header {
+    display: block;
+    position: fixed;
+    width: 100%;
+    height: 70px;
+    top: 0;
+    z-index: 9999;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.logo-container {
+    padding: 0 20px;
+}
+
+.logo-container a, .v2 a {
+    display: flex;
+    align-items: center;
+}
+
+.logo-container a img, .v2 a img {
+    max-height: 45px;
+}
+
+.logo-container a span, .v2 a span {
+    font-size: 28px;
+    font-weight: 700;
+    padding-left: 10px;
+}
+
+.user-container {
+    position: relative;
+    margin-left: auto;
+    padding-inline: 20px;
+}
+
+.user-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    border-radius: 9999px;
+    outline: none;
+}
+
+.user-button .account-circle {
+    font-size: 30px;
+}
+
+.user-button .arrow-down {
+    display: none;
+}
+
+.user-button span {
+    display: none;
+}
+
+.user-options-list {
+    position: absolute;
+    width: 200px;
+    color: var(--primary-color);
+    background-color: #eee;
+    border-radius: 4px;
+    margin-top: 14.4px;
+    padding: 6px 0;
+    right: 20px;
+    z-index: -1;
+    user-select: none;
+}
+
+.user-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: left;
+    padding: 5px 10px 5px 17px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-option:hover {
+    background-color: rgba(0, 0, 0, .08);
+}
+
+.user-option svg {
+    display: inline-block;
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.user-option div {
+    display: inline-block;
+}
+
+.user-options div a {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.user-options div a svg, .user-options div svg {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.confirm-logout {
+    position: fixed;
+    inset: 0;
+}
+
+.confirm-logout-message {
+    width: 345px;
+    height: auto;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    padding: 24px;
+}
+
+.confirm-logout-title {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    cursor: default;
+}
+
+.confirm-logout-dialog {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column; 
+}
+
+.confirm-logout-dialog h4 {
+    font-size: 15px;
+    font-weight: 100;
+    text-align: center;
+    margin-bottom: 0.5em;
+}
+
+.confirm-logout-buttons {
+    display: flex;
+    align-items: center;
+    column-gap: 2.5rem;
+    padding-top: 10px;
+}
+
+.login-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--primary-color);
+    background-color: var(--secondary-color);
+    border-radius: 9999px;
+}
+
+.login-button:hover {
+    background-color: var(--hover-color);
+}
+
+.login-button svg {
+    font-size: 30px;
+}
+
+.login-button span {
+    display: none;
+}
+
+.bars {
+    padding: 20px;
+    outline: none;
+}
+
+.bars svg {
+    font-size: 27px;
+    color: #eee;
+}
+
+@media (min-width: 768px) {
+    .user-button {
+        width: auto;
+        height: auto;
+        padding: 0 20px;
+        background-color: transparent;
+        border-radius: 6px;
+        color: inherit;
+    }
+    .user-button .account-circle {
+        display: none;
+        font-size: 20px;
+        margin-right: 5px;
+    }
+    .user-button .arrow-down {
+        display: inline-block;
+        font-size: 20px;
+        margin-left: 5px;
+    }
+    .user-button span {
+        display: block;
+        font-weight: 700;
+    }
+    .user-options-list {
+        right: 40px;
+        margin-top: 23px;
+    }
+    .user-options-list div:first-child {
+        display: none;
+    }
+    .login-button {
+        width: auto;
+        height: auto;
+        padding: 5px 10px;
+        border-radius: 6px;
+    }
+    .login-button svg {
+        font-size: 20px;
+        margin-right: 5px;
+    }
+    .login-button span {
+        display: block;
+        font-size: 15px;
+        font-weight: 500;
+    }
+}

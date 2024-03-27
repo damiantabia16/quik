@@ -1,0 +1,76 @@
+@import '/src/index.css';
+
+.add-reminder {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-right: 20px;
+    background-color: #eee;
+    border-radius: 4px;
+}
+
+.add-reminder form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.reminder-form {
+    position: relative;
+    width: 100%;
+    padding-bottom: 8px;
+}
+
+.reminder-title {
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.date-container {
+    padding-top: 15px;
+}
+
+.date-container .date-label label, .time-container .time-label label {
+    font-size: 14px;
+    color: var(--primary-color);
+}
+
+.date-container #date, .time-container #time {
+    width: 100%;
+    font-size: 14px;
+    color: var(--primary-color);
+    background-color: #eee;
+    outline: none;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+}
+
+.date-container div[role='button'] {
+    position: absolute;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    right: 0;
+}
+
+.date-container div[role='button'] svg {
+    font-size: 18px;
+    color: var(--primary-color);
+    margin: auto;
+}
+
+.time-container {
+    padding-block: 15px;
+}
+
+.set-reminder-button {
+    padding-bottom: 7px;
+}
+
+.calendar {
+    position: absolute;
+    top: 92px;
+    left: 0;
+    right: 0;
+    color: var(--primary-color);
+    scale: .9;
+}
