@@ -8,7 +8,7 @@ export const register = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const checkUser = 'SELECT * FROM user_data WHERE username = ?';
+        const checkUser = 'SELECT * FROM users WHERE username = ?';
         db.query(checkUser, [username], async (checkUserErr, checkUserResult) => {
             if (checkUserErr) {
                 console.error('Error al verificar el usuario existente:', checkUserErr);
@@ -18,7 +18,7 @@ export const register = async (req, res) => {
             } else {
                 const hashPassword = await bcrypt.hash(password, 10);
                 
-                const insert = 'INSERT INTO user_data (username, password) VALUES (?, ?)';
+                const insert = 'INSERT INTO users (username, password) VALUES (?, ?)';
                 db.query(insert, [username, hashPassword], async (err, result) => {
                     if (err) {
                         console.error('Error al registrar el usuario:', err);
@@ -45,7 +45,7 @@ export const login = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const query = "SELECT * FROM user_data WHERE username = ?";
+        const query = "SELECT * FROM users WHERE username = ?";
         db.query(query, [username], async (err, result) => {
             if (err) {
                 console.error('Error al ejecutar la consulta:', err);
@@ -89,7 +89,7 @@ export const profile = async (req, res) => {
     const userId = await req.user.id;
 
     try {
-        const query = "SELECT * FROM user_data WHERE id = ?";
+        const query = "SELECT * FROM users WHERE id = ?";
         db.query(query, [userId], (err, result) => {
             if (err) {
                 console.error('Error al obtener el perfil del usuario:', err);
@@ -132,7 +132,7 @@ export const verifyToken = async (req, res) => {
         const userId = user.id;
 
         try {
-            const query = "SELECT * FROM user_data WHERE id = ?";
+            const query = "SELECT * FROM users WHERE id = ?";
             db.query(query, [userId], (err, result) => {
                 if (err) {
                     console.error('Error querying user data:', err);
