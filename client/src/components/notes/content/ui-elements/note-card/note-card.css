@@ -166,3 +166,7 @@
 .delete-reminder.option-hover:hover, #options button.option-hover:hover {
     background-color: rgba(95, 99, 104, 0.3);
 }
+
+.highlight {
+    background-color: var(--secondary-color);
+}

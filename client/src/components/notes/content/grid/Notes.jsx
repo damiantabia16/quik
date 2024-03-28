@@ -9,7 +9,7 @@ import Note from '../ui-elements/popup-note/Note';
 import NoteCard from '../ui-elements/note-card/NoteCard';
 import { useLocation } from 'react-router-dom';
 
-function Searcher({ boardName }) {
+function Searcher({ boardName, searchTerm, setSearchTerm }) {
 
   const [placeholder, setPlaceholder] = useState('');
 
@@ -33,13 +33,19 @@ function Searcher({ boardName }) {
     <div className='searcher-container'>
       <div className='searcher'>
         <FaSearch />
-        <input id='notes-searcher' type="text" placeholder={`Buscar en ${placeholder}...`} />
+        <input
+          id='notes-searcher'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          type="text"
+          placeholder={`Buscar en ${placeholder}...`}
+          autoComplete='off' />
       </div>
     </div>
   )
 };
 
-function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelectedNotes, handleArchiveNote, handleUnarchiveNote, handleSendNoteToBin, handleDeleteNote, handleRestoreNote, setMessage }) {
+function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelectedNotes, handleSelectAll, allSelected, handleArchiveNote, handleUnarchiveNote, handleSendNoteToBin, handleDeleteNote, handleRestoreNote, setMessage, searchTerm, setSearchTerm }) {
 
   const { notes, setNotes, getNotes } = useNote();
 
@@ -48,6 +54,7 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
   const [initialMessage, setInitialMessage] = useState('');
   const [icon, setIcon] = useState(null);
   const [lastMessage, setLastMessage] = useState('');
+  const [noResultMessage, setNoResultMessage] = useState('');
 
   const { pathname } = useLocation();
 
@@ -60,32 +67,65 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
     let initial = '';
     let icon = null;
     let last = '';
-    if (pathname.includes('/notas')) {
-      filtered = notes.filter(note => !note.is_archived && !note.in_bin);
-      initial = 'Aún no tienes ninguna nota';
-      icon = '+';
-      last = 'en el costado inferior derecho para crear una.';
-    } else if (pathname.includes('/recordatorios')) {
-      filtered = notes.filter(note => note.reminder && !note.in_bin);
-      initial = 'Parece que tienes buena memoria';
-      icon = <MdAddAlarm />;
-      last = 'para añadir un recordatorio.';
-    } else if (pathname.includes('/archivos')) {
-      filtered = notes.filter(note => note.is_archived && !note.in_bin);
-      initial = 'Nada que ocultar por aquí';
-      icon = <RiArchive2Fill />;
-      last = 'para archivar una nota.';
-    } else if (pathname.includes('/papelera')) {
-      filtered = notes.filter(note => note.in_bin);
-      initial = 'Aún no eliminaste ninguna nota';
-      icon = <MdDelete />;
-      last = 'para eliminar una nota.';
+    let noResultMessage = '';
+
+    if (searchTerm.trim() !== '') {
+      if (pathname.includes('/notas')) {
+        filtered = notes.filter(note =>
+          !note.is_archived &&
+          !note.in_bin &&
+          (note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      } else if (pathname.includes('/recordatorios')) {
+        filtered = notes.filter(note =>
+          note.reminder &&
+          !note.in_bin &&
+          (note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      } else if (pathname.includes('/archivos')) {
+        filtered = notes.filter(note =>
+          note.is_archived &&
+          !note.in_bin &&
+          (note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      }
+    } else {
+      if (pathname.includes('/notas')) {
+        filtered = notes.filter(note => !note.is_archived && !note.in_bin);
+        initial = 'Aún no tienes ninguna nota';
+        icon = '+';
+        last = 'en el costado inferior derecho para crear una.';
+      } else if (pathname.includes('/recordatorios')) {
+        filtered = notes.filter(note => note.reminder && !note.in_bin);
+        initial = 'Parece que tienes buena memoria';
+        icon = <MdAddAlarm />;
+        last = 'para añadir un recordatorio.';
+      } else if (pathname.includes('/archivos')) {
+        filtered = notes.filter(note => note.is_archived && !note.in_bin);
+        initial = 'Nada que ocultar por aquí';
+        icon = <RiArchive2Fill />;
+        last = 'para archivar una nota.';
+      } else if (pathname.includes('/papelera')) {
+        filtered = notes.filter(note => note.in_bin);
+        initial = 'Aún no eliminaste ninguna nota';
+        icon = <MdDelete />;
+        last = 'para eliminar una nota.';
+      }
     }
+
+    if (filtered.length === 0) {
+      noResultMessage = 'No se ha encontrado ninguna nota';
+    }
+
     setFilteredNotes(filtered);
     setInitialMessage(initial);
     setIcon(icon);
     setLastMessage(last);
-  }, [notes, pathname]);
+    setNoResultMessage(noResultMessage);
+  }, [notes, pathname, searchTerm]);
 
   const handleDragStart = (note) => {
     setDraggedNote(note)
@@ -130,29 +170,34 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
               editNoteForm={editNoteForm}
               selectedNotes={selectedNotes}
               setSelectedNotes={setSelectedNotes}
+              handleSelectAll={handleSelectAll}
+              allSelected={allSelected}
               handleArchiveNote={handleArchiveNote}
               handleUnarchiveNote={handleUnarchiveNote}
               handleSendNoteToBin={handleSendNoteToBin}
               handleDeleteNote={handleDeleteNote}
               handleRestoreNote={handleRestoreNote}
-              setMessage={setMessage} />
+              setMessage={setMessage}
+              searchTerm={searchTerm} />
           ))}
         </Masonry>
       ) : (
         <div className='empty-notes-board-container'>
           <div className='empty-notes-board-dialog add-note-blur'>
-            <p className='empty-notes-board-dialog-initial'>
-              {initialMessage}
+            <p className={`empty-notes-board-dialog-initial ${initialMessage ? 'initial' : ''}`}>
+              {initialMessage || noResultMessage}
             </p>
-            <p>
-              <span className='empty-notes-board-dialog-span'>
-                Haz click en el botón{' '}
-                <span className='empty-notes-board-icon'>
-                  {icon}
-                </span>{' '}
-                {lastMessage}
-              </span>
-            </p>
+            {initialMessage && (
+              <p>
+                <span className='empty-notes-board-dialog-span'>
+                  Haz click en el botón
+                  <span className='empty-notes-board-icon'>
+                    {icon}
+                  </span>
+                  {lastMessage}
+                </span>
+              </p>
+            )}
           </div>
         </div>
       )}
@@ -160,12 +205,14 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
   )
 }
 
-function Notes({ boardId, boardName, setMessage, selectedNotes, setSelectedNotes }) {
+function Notes({ boardId, boardName, setMessage, selectedNotes, setSelectedNotes, handleSelectAll, allSelected }) {
 
   const { getNote, getNotes, archiveNote, unarchiveNote, sendNoteToBin, deleteNote, restoreNote } = useNote();
 
   const [editNoteForm, setEditNoteForm] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+
+  const [searchTerm, setSearchTerm] = useState('');
 
   const editNote = async (noteId) => {
     try {
@@ -236,19 +283,26 @@ function Notes({ boardId, boardName, setMessage, selectedNotes, setSelectedNotes
   return (
     <>
       <section id="notes">
-        <Searcher boardName={boardName} />
+        <Searcher
+          boardName={boardName}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm} />
         <NotesGrid
           boardId={boardId}
           editNote={editNote}
           editNoteForm={editNoteForm}
           selectedNotes={selectedNotes}
           setSelectedNotes={setSelectedNotes}
+          handleSelectAll={handleSelectAll}
+          allSelected={allSelected}
           handleArchiveNote={handleArchiveNote}
           handleUnarchiveNote={handleUnarchiveNote}
           handleSendNoteToBin={handleSendNoteToBin}
           handleDeleteNote={handleDeleteNote}
           handleRestoreNote={handleRestoreNote}
-          setMessage={setMessage} />
+          setMessage={setMessage}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm} />
         <Note
           boardId={boardId}
           isMounted={isMounted}

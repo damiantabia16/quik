@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Tooltip } from 'react-tooltip';
 import { options } from '../../options';
 import { useNote } from '../../../../../hooks/useNote';
@@ -19,22 +20,26 @@ export default function NoteCard({
     editNote,
     selectedNotes,
     setSelectedNotes,
+    allSelected,
     handleArchiveNote,
     handleUnarchiveNote,
     handleSendNoteToBin,
     handleDeleteNote,
     handleRestoreNote,
-    setMessage
+    setMessage,
+    searchTerm
 }) {
 
     const noteRef = useRef(null);
+
+    const { pathname } = useLocation();
 
     const { getNotes, updateNote, deleteReminder } = useNote();
 
     const [hover, setHover] = useState(false);
     const [dateHover, setDateHover] = useState(false);
 
-    const [selectedNote, setSelectedNote] = useState(false);
+    const [isSelected, setIsSelected] = useState(false);
 
     const [isDragging, setIsDragging] = useState(false);
 
@@ -46,6 +51,12 @@ export default function NoteCard({
     const [isFadingOut, setIsFadingOut] = useState(false);
 
     const [confirmDelete, setConfirmDelete] = useState(false);
+
+    const highlightMatchingText = (text, searchTerm) => {
+        if (!searchTerm.trim()) return text;
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+    };
 
     const truncateText = (text, maxLength) => {
         const truncatedText = text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
@@ -65,10 +76,11 @@ export default function NoteCard({
     };
 
     const handleEditNote = (noteId) => {
-        if (!window.location.pathname.includes(`/tableros/${boardId}/papelera`)) {
+        if (!pathname.includes('/papelera')) {
             editNote(noteId);
         }
     };
+
     const handleConfirmDelete = () => {
         handleDeleteNote(note.id);
     }
@@ -78,9 +90,9 @@ export default function NoteCard({
     }
 
     const handleSelection = () => {
-        setSelectedNote(!selectedNote);
+        setIsSelected(!isSelected);
         setSelectedNotes(prevSelectedNotes => {
-            if (selectedNote) {
+            if (isSelected) {
                 return prevSelectedNotes.filter(id => id !== note.id);
             } else {
                 return [...prevSelectedNotes, note.id];
@@ -90,9 +102,15 @@ export default function NoteCard({
 
     useEffect(() => {
         if (selectedNotes.length === 0) {
-            setSelectedNote(false)
+            setIsSelected(false)
         }
     }, [selectedNotes]);
+
+    useEffect(() => {
+        if (allSelected) {
+            setIsSelected(true);
+        }
+    }, [allSelected]);
 
     const handleButtons = (optionId, noteId) => {
         if (optionId === 1) {
@@ -165,7 +183,7 @@ export default function NoteCard({
     };
 
     const cardStyle = {
-        backgroundColor: note.background_color,
+        backgroundColor: pickedColor,
         transition: 'all 0.2s ease'
     };
 
@@ -196,19 +214,19 @@ export default function NoteCard({
             <div
                 ref={noteRef}
                 onClick={() => {if (selectedNotes.length > 0) handleSelection()}}
-                draggable={!window.location.pathname.includes(`/tableros/${boardId}/papelera`)}
+                draggable={!pathname.includes('/papelera')}
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
                 onDrop={handleDrop}
                 onDragEnd={handleDragEnd}
                 onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
-                className={`note-card ${isFadingOut ? 'fade-out' : ''} ${selectedNote ? 'selected' : ''}`}
+                className={`note-card ${isFadingOut ? 'fade-out' : ''} ${isSelected ? 'selected' : ''}`}
                 style={cardStyle}>
                 <div
                     role='button'
                     onClick={(e) => {e.stopPropagation(); handleSelection()}}
-                    className={`select-note ${hover ? 'active' : ''} ${selectedNote ? 'is-selected' : ''}`}
+                    className={`select-note ${hover ? 'active' : ''} ${isSelected ? 'is-selected' : ''}`}
                     data-tooltip-id='select-note-tooltip'
                     data-tooltip-content='Seleccionar nota'>
                     <MdCheckCircle />
@@ -223,11 +241,11 @@ export default function NoteCard({
                         <>
                             {note && note.note_title ? (
                                 <div className='note-card-title'>
-                                    <h3>{note.note_title}</h3>
+                                    <h3>{Parser(highlightMatchingText(note.note_title, searchTerm))}</h3>
                                 </div>
                             ) : ('')}
                             <div className='note-card-description'>
-                                <span style={{ whiteSpace: 'pre-line' }}>{truncateText(note.note_content, 500)}</span>
+                                <span style={{ whiteSpace: 'pre-line' }}>{truncateText(highlightMatchingText(note.note_content, searchTerm),500)}</span>
                             </div>
                             {note.reminder ? (
                                 <div
@@ -252,9 +270,9 @@ export default function NoteCard({
                         </>
                     )}
                 </div>
-                <div id="options" className={`${window.location.pathname === `/tableros/${boardId}/papelera` ? 'in-bin' : 'out-bin'} ${hover && selectedNotes.length === 0 ? 'is-visible' : 'not-visible'} ${selectedNote ? 'is-selected' : ''}`}>
+                <div id="options" className={`${pathname.includes('/papelera') ? 'in-bin' : 'out-bin'} ${hover && selectedNotes.length === 0 ? 'is-visible' : 'not-visible'} ${isSelected ? 'is-selected' : ''}`}>
                     {options.map(option => {
-                        if (window.location.pathname === `/tableros/${boardId}/notas`) {
+                        if (pathname.includes('/notas')) {
                             if ([1, 2, 3, 7].includes(option.id)) {
                                 return (
                                     <button
@@ -271,7 +289,7 @@ export default function NoteCard({
                                     </button>
                                 );
                             }
-                        } else if (window.location.pathname === `/tableros/${boardId}/recordatorios`) {
+                        } else if (pathname.includes('/recordatorios')) {
                             if ([1, 2, 3, 7].includes(option.id)) {
                                 return (
                                     <button
@@ -288,7 +306,7 @@ export default function NoteCard({
                                     </button>
                                 );
                             }
-                        } else if (window.location.pathname === `/tableros/${boardId}/archivos`) {
+                        } else if (pathname.includes('/archivos')) {
                             if ([1, 2, 4, 7].includes(option.id)) {
                                 return (
                                     <button
@@ -305,7 +323,7 @@ export default function NoteCard({
                                     </button>
                                 );
                             }
-                        } else if (window.location.pathname === `/tableros/${boardId}/papelera`) {
+                        } else if (pathname.includes('/papelera')) {
                             if ([8, 9].includes(option.id)) {
                                 return (
                                     <button

@@ -35,7 +35,7 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
 
   useEffect(() => {
     function updateNoteCardPosition() {
-      if (formRef?.current) {
+      if (formRef) {
         const newNoteCard = formRef.current.getBoundingClientRect();
         setNoteCard(newNoteCard);
       }
@@ -59,7 +59,9 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
   }, [formRef, noteRef?.current]);
 
   const handleOutsideClick = (e) => {
-    const isAddReminderButtonClicked = formRef?.current?.contains(e.target.closest("#add-note-options button[data-option-id='1']")) || noteRef?.current?.contains(e.target.closest("#options button[data-option-id='1']"));
+    const isAddReminderButtonClicked =
+      formRef?.current?.contains(e.target.closest("#add-note-options button[data-option-id='1']")) ||
+      noteRef?.current?.contains(e.target.closest("#options button[data-option-id='1']"));
     const clickedOutsideReminder = reminderRef.current && !reminderRef.current.contains(e.target);
     if (!isAddReminderButtonClicked && clickedOutsideReminder) {
       setAddReminder(false);
@@ -80,7 +82,7 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
   if (formRef) {
     addReminderPosition = {
       position: 'fixed',
-      top: noteCard ? noteCard.top - 355 + 'px' : 'auto',
+      bottom: '210px',
       left: noteCard ? noteCard.left + 'px' : 'auto',
       zIndex: '999',
       animation: 'displayUi 0.2s'

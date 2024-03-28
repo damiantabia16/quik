@@ -296,7 +296,7 @@ export default function CreateNote({ boardId, isMounted, createNoteForm, setCrea
                 </form>
             </section>
             <Reminder addReminder={addReminder} setAddReminder={setAddReminder} boardId={boardId} formRef={formRef} />
-            <ColorPicker selectColor={selectColor} setSelectColor={setSelectColor} formRef={formRef} selectedColor={selectedColor} setSelectedColor={setSelectedColor} handlePickColor={handlePickColor} />
+            <ColorPicker selectColor={selectColor} setSelectColor={setSelectColor} formRef={formRef} handlePickColor={handlePickColor} />
         </div>,
         document.body
     )

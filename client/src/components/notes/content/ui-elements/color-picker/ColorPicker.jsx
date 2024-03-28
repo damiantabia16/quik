@@ -13,7 +13,7 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
 
     useEffect(() => {
         function updateNoteCardPosition() {
-            if (formRef?.current) {
+            if (formRef) {
                 const newNoteCard = formRef.current.getBoundingClientRect();
                 setNoteCard(newNoteCard);
             }
@@ -37,7 +37,9 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
     }, [formRef, noteRef?.current]);
 
     const handleOutsideClick = (e) => {
-        const isColorPickerButtonClicked = formRef?.current?.contains(e.target.closest("#add-note-options button[data-option-id='2']")) || noteRef?.current?.contains(e.target.closest("#options button[data-option-id='2']"));
+        const isColorPickerButtonClicked =
+            formRef?.current?.contains(e.target.closest("s#add-note-options button[data-option-id='2']")) ||
+            noteRef?.current?.contains(e.target.closest("#options button[data-option-id='2']"));
         const clickedOutsideColorPicker = pickerRef.current && !pickerRef.current.contains(e.target);
         if (!isColorPickerButtonClicked && clickedOutsideColorPicker) {
             setSelectColor(false);
@@ -59,7 +61,7 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
         colorPickerPosition = {
             position: 'fixed',
             width: noteCard ? noteCard.width : 'auto',
-            top: noteCard ? noteCard.top - 200 + 'px' : 'auto',
+            bottom: '210px',
             left: noteCard ? noteCard.left + 'px' : 'auto',
             zIndex: '999',
             animation: 'displayUi 0.2s'
