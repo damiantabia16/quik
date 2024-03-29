@@ -25,4 +25,8 @@ app.get("/", (req, res) => {
     res.json("El servidor está funcionando correctamente.");
 })
 
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end();
+});
+
 export default app;
