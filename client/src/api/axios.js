@@ -2,7 +2,7 @@ import axios from 'axios';
 import { API_URL } from '../config';
 
 const instance = axios.create({
-    baseURL: "http://localhost:4000/api" || "https://quik-server.vercel.app/",
+    baseURL: "https://quik-server.vercel.app/api",
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
