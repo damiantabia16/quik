@@ -12,4 +12,22 @@ const instance = axios.create({
     }
 });
 
+instance.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+        const originalRequest = error.config;
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const res = await axios.post('/auth/refresh-token');
+                instance.defaults.headers.common['Authorization'] = `Bearer ${res.data.accessToken}`;
+                return instance(originalRequest);
+            } catch (refreshError) {
+                throw refreshError;
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default instance;

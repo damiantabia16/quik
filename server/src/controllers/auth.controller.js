@@ -1,6 +1,6 @@
 import db from "../db.js";
 import bcrypt from 'bcryptjs';
-import { createAccessToken } from "../libs/jwt.js";
+import { createAccessToken, createRefreshToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
@@ -17,7 +17,7 @@ export const register = async (req, res) => {
                 return res.status(400).json(['El usuario ya está en uso']);
             } else {
                 const hashPassword = await bcrypt.hash(password, 10);
-                
+
                 const insert = 'INSERT INTO users (username, password) VALUES (?, ?)';
                 db.query(insert, [username, hashPassword], async (err, result) => {
                     if (err) {
@@ -25,8 +25,10 @@ export const register = async (req, res) => {
                         return res.status(500).send('Error al registrar el usuario');
                     } else {
                         const userId = result.insertId;
-                        const token = await createAccessToken({ id: userId })
-                        res.cookie('token', token, { sameSite: 'none', secure: true })
+                        const token = await createAccessToken({ id: userId });
+                        const refreshToken = await createRefreshToken({ id: userId });
+                        res.cookie('token', token, { sameSite: 'none', secure: true });
+                        res.cookie('refreshToken', refreshToken, { sameSite: 'none', secure: true });
                         res.json({
                             id: userId,
                             username
@@ -58,11 +60,13 @@ export const login = async (req, res) => {
                 }
 
                 const match = await bcrypt.compare(password, user.password);
-    
+
                 if (match) {
                     const userId = user.id;
                     const token = await createAccessToken({ id: userId });
-                    res.cookie('token', token, { sameSite: 'none', secure: true })
+                    const refreshToken = await createRefreshToken({ id: userId });
+                    res.cookie('token', token, { sameSite: 'none', secure: true });
+                    res.cookie('refreshToken', refreshToken, { sameSite: 'none', secure: true });
                     res.json({
                         id: userId,
                         username: user.username
@@ -96,11 +100,11 @@ export const profile = async (req, res) => {
                 return res.status(500).json({ message: 'Error al obtener el perfil del usuario' });
             } else {
                 const [user] = result;
-    
+
                 if (!user) {
                     return res.status(404).json({ message: 'Usuario no encontrado' });
                 }
-    
+
                 res.json({
                     id: user.id,
                     username: user.username
@@ -124,7 +128,7 @@ export const verifyToken = async (req, res) => {
         if (err) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
-        
+
         if (!user.id) {
             return res.status(401).json({ message: 'User not found in token' });
         }
@@ -153,4 +157,25 @@ export const verifyToken = async (req, res) => {
             res.status(500).json({ message: 'Unexpected error' });
         }
     });
+};
+
+export const refreshAccessToken = async (req, res) => {
+    const { refreshToken } = req.cookies;
+
+    if (!refreshToken) {
+        return res.status(401).json({ message: 'Refresh token is required' });
+    }
+
+    try {
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                return res.status(403).json({ message: 'Invalid refresh token' });
+            }
+            const accessToken = createAccessToken({ id: user.id });
+            res.json({ accessToken });
+        });
+    } catch (error) {
+        console.error('Error refreshing access token:', error);
+        res.status(500).json({ message: 'Error refreshing access token' });
+    }
 };
