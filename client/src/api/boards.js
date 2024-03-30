@@ -1,13 +1,6 @@
 import axios from './axios.js';
-import Cookies from 'js-cookie';
 
-const cookies = Cookies.get();
-
-export const getBoardsRequest = () => axios.get('/tableros', {
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + cookies.token
-    }});
+export const getBoardsRequest = () => axios.get('/tableros');
 
 export const getBoardRequest = (id) => axios.get(`/tableros/${id}`);
 
