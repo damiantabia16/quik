@@ -1,8 +1,6 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 
 const token = sessionStorage.getItem('token');
-console.log(token);
 
 const instance = axios.create({
     baseURL: "https://quik-server.vercel.app/api",
