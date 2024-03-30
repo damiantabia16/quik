@@ -5,11 +5,7 @@ const token = Cookies.get('token');
 
 const instance = axios.create({
     baseURL: "https://quik-server.vercel.app/api",
-    withCredentials: true,
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    }
+    withCredentials: true
 });
 
 instance.interceptors.response.use(
