@@ -56,9 +56,6 @@ export const AuthProvider = ({ children }) => {
                 setLoading(false);
                 return;
             }
-
-            sessionStorage.setItem('token', cookies.token);
-
             try {
                 const res = await verifyTokenRequest(cookies.token)
                 if (!res.data) {

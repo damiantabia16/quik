@@ -17,9 +17,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api", authRoutes);
-app.use("/api", boardsRoutes);
-app.use("/api", notesRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/boards", boardsRoutes);
+app.use("/api/notes", notesRoutes);
 
 app.get("/", (req, res) => {
     res.json("El servidor está funcionando correctamente.");
