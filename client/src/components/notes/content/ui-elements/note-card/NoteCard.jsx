@@ -52,6 +52,23 @@ export default function NoteCard({
 
     const [confirmDelete, setConfirmDelete] = useState(false);
 
+    const [showAlert, setShowAlert] = useState(false);
+
+    useEffect(() => {
+        const reminderInterval = setInterval(() => {
+            const reminderTime = new Date(note.reminder).getTime();
+            const currentTime = new Date().getTime();
+
+            if (currentTime >= reminderTime && note.reminder && !showAlert) {
+                setShowAlert(true);
+                alert(`¡Es hora de tu recordatorio para "${note.note_title}"!`);
+                clearInterval(reminderInterval);
+            }
+        }, 1000);
+
+        return () => clearInterval(reminderInterval);
+    }, [note, showAlert]);
+
     const highlightMatchingText = (text, searchTerm) => {
         if (!searchTerm.trim()) return text;
         const regex = new RegExp(`(${searchTerm})`, 'gi');
@@ -213,7 +230,7 @@ export default function NoteCard({
         <div className='note-card-container'>
             <div
                 ref={noteRef}
-                onClick={() => {if (selectedNotes.length > 0) handleSelection()}}
+                onClick={() => { if (selectedNotes.length > 0) handleSelection() }}
                 draggable={!pathname.includes('/papelera')}
                 onDragStart={handleDragStart}
                 onDragOver={handleDragOver}
@@ -225,14 +242,14 @@ export default function NoteCard({
                 style={cardStyle}>
                 <div
                     role='button'
-                    onClick={(e) => {e.stopPropagation(); handleSelection()}}
+                    onClick={(e) => { e.stopPropagation(); handleSelection() }}
                     className={`select-note ${hover ? 'active' : ''} ${isSelected ? 'is-selected' : ''}`}
                     data-tooltip-id='select-note-tooltip'
                     data-tooltip-content='Seleccionar nota'>
                     <MdCheckCircle />
                     <Tooltip id='select-note-tooltip' effect="solid" place="bottom" />
                 </div>
-                <div onClick={() => {if (selectedNotes.length === 0) handleEditNote(note.id)}} className='note-card-content'>
+                <div onClick={() => { if (selectedNotes.length === 0) handleEditNote(note.id) }} className='note-card-content'>
                     {!note.note_title && !note.note_content ? (
                         <div className='note-card-title'>
                             <p>Nota vacía</p>
@@ -245,7 +262,7 @@ export default function NoteCard({
                                 </div>
                             ) : ('')}
                             <div className='note-card-description'>
-                                <span style={{ whiteSpace: 'pre-line' }}>{truncateText(highlightMatchingText(note.note_content, searchTerm),500)}</span>
+                                <span style={{ whiteSpace: 'pre-line' }}>{truncateText(highlightMatchingText(note.note_content, searchTerm), 500)}</span>
                             </div>
                             {note.reminder ? (
                                 <div

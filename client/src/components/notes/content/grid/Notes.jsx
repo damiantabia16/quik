@@ -69,27 +69,27 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
     let last = '';
     let noResultMessage = '';
 
-    if (searchTerm.trim() !== '') {
+    if (searchTerm && searchTerm.trim() !== '') {
       if (pathname.includes('/notas')) {
         filtered = notes.filter(note =>
           !note.is_archived &&
           !note.in_bin &&
-          (note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+          (note.note_title && note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       } else if (pathname.includes('/recordatorios')) {
         filtered = notes.filter(note =>
           note.reminder &&
           !note.in_bin &&
-          (note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+          (note.note_title && note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       } else if (pathname.includes('/archivos')) {
         filtered = notes.filter(note =>
           note.is_archived &&
           !note.in_bin &&
-          (note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+          (note.note_title && note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       }
     } else {

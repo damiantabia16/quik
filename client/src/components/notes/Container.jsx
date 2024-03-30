@@ -97,11 +97,7 @@ function Container() {
     const [isArchived, setIsArchived] = useState(false);
     const [message, setMessage] = useState('');
     const [undoPerformed, setUndoPerformed] = useState(false);
-    const [selectedNote, setSelectedNote] = useState(null);
     const [selectedNotes, setSelectedNotes] = useState([]);
-    const [addReminder, setAddReminder] = useState(false);
-    const [selectColor, setSelectColor] = useState(false);
-    const [pickedColor, setPickedColor] = useState('');
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [allSelected, setAllSelected] = useState(false);
 
@@ -184,10 +180,6 @@ function Container() {
     const handleDeleteNote = async (noteId) => {
         try {
             await deleteNote(boardId, { id: noteId });
-            setMessage('Nota eliminada');
-            setTimeout(() => {
-                setMessage('');
-            }, 7000);
             getNotes(boardId);
         } catch (error) {
             console.error('Error al eliminar definitivamente la nota:', error);
@@ -204,8 +196,19 @@ function Container() {
     };
 
     const handleConfirmDelete = () => {
-        handleDeleteNote(noteId);
-    }
+        setMessage(selectedNotes.length > 1 ? 'Notas eliminadas' : 'Nota eliminada');
+        setTimeout(() => {
+            setMessage('');
+        }, 7000);
+        selectedNotes.forEach(noteId => {
+            setTimeout(() => {
+                handleDeleteNote(noteId);
+            }, 200);
+        });
+        setSelectedNotes([]);
+        setAllSelected(false);
+        setConfirmDelete(false);
+    };
 
     const handleCancelDelete = () => {
         setConfirmDelete(false)

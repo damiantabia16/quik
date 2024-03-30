@@ -38,7 +38,7 @@ export default function ColorPicker({ selectColor, setSelectColor, pickedColor, 
 
     const handleOutsideClick = (e) => {
         const isColorPickerButtonClicked =
-            formRef?.current?.contains(e.target.closest("s#add-note-options button[data-option-id='2']")) ||
+            formRef?.current?.contains(e.target.closest("#add-note-options button[data-option-id='2']")) ||
             noteRef?.current?.contains(e.target.closest("#options button[data-option-id='2']"));
         const clickedOutsideColorPicker = pickerRef.current && !pickerRef.current.contains(e.target);
         if (!isColorPickerButtonClicked && clickedOutsideColorPicker) {

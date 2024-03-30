@@ -8,8 +8,8 @@ import './note.css';
 import '../../custom-toolbar.css';
 import { useNote } from '../../../../../hooks/useNote';
 import { Button } from '../../../../ui/button/Button';
-import { MdOutlineWatchLater, MdClose } from "react-icons/md";
 import useUndoRedo from '../../../../../hooks/useUndoRedo';
+import ContentEditable from 'react-contenteditable';
 
 export default function Note({ boardId, isMounted, setIsMounted, editNoteForm, setEditNoteForm, closeEditNote, handleArchiveNote, handleDeleteNote }) {
 
@@ -103,17 +103,6 @@ export default function Note({ boardId, isMounted, setIsMounted, editNoteForm, s
         setValue('note_content', states[Math.min(states.length - 1, index + 1)]);
         handleRedo();
     };
-
-    useEffect(() => {
-        if (editorRef.current) {
-            const range = document.createRange();
-            const selection = window.getSelection();
-            range.setStart(editorRef.current, editorRef.current.childNodes.length);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }, [state]);
 
     const isStyleApplied = (style, range) => {
         if (!range || range.collapsed) {
@@ -236,15 +225,15 @@ export default function Note({ boardId, isMounted, setIsMounted, editNoteForm, s
                                 <div className={`${placeholder && !state ? 'editor-placeholder' : 'hidden'}`}>
                                     Escribe tu nota aquí...
                                 </div>
-                                <div
+                                <ContentEditable
                                     id='editor'
-                                    ref={editorRef}
-                                    contentEditable={true}
+                                    innerRef={editorRef}
+                                    html={state}
+                                    onChange={handleContentChange}
+                                    tagName='div'
                                     aria-multiline
                                     tabIndex={0}
                                     role='textbox'
-                                    dangerouslySetInnerHTML={{ __html: state }}
-                                    onInput={handleContentChange}
                                     spellCheck
                                 />
                                 <div id='styles'>

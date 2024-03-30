@@ -12,6 +12,7 @@ import '../../custom-toolbar.css';
 import { Button } from '../../../../ui/button/Button';
 import Reminder from '../reminder/Reminder';
 import ColorPicker from '../color-picker/ColorPicker';
+import ContentEditable from 'react-contenteditable'
 
 export default function CreateNote({ boardId, isMounted, createNoteForm, setCreateNoteForm, toggleCreateNote, placeholder, setPlaceholder, selectedColor, setSelectedColor, isArchived, setIsArchived, resetValues }) {
 
@@ -79,21 +80,10 @@ export default function CreateNote({ boardId, isMounted, createNoteForm, setCrea
     const editorRef = useRef(null);
 
     const handleContentChange = (e) => {
-        const text = e.target.innerHTML;
+        const text = e.target.value;
         setState(text);
-        setPlaceholder(text.length === 0);
+        setPlaceholder(text.length === 0 ? true : false);
     };
-
-    useEffect(() => {
-        if (editorRef.current) {
-            const range = document.createRange();
-            const selection = window.getSelection();
-            range.setStart(editorRef.current, editorRef.current.childNodes.length);
-            range.collapse(true);
-            selection.removeAllRanges();
-            selection.addRange(range);
-        }
-    }, [state]);
 
     const isStyleApplied = (style, range) => {
         if (!range || range.collapsed) {
@@ -230,11 +220,12 @@ export default function CreateNote({ boardId, isMounted, createNoteForm, setCrea
 
     useEffect(() => {
         if (isArchived) {
-            onSubmit({             
+            onSubmit({
                 is_archived: true,
                 note_title: getValues("note_title"),
                 note_content: state,
-                background_color: selectedColor })
+                background_color: selectedColor
+            })
             setIsArchived(false);
         }
     }, [isArchived])
@@ -251,15 +242,15 @@ export default function CreateNote({ boardId, isMounted, createNoteForm, setCrea
                     <div className={`${placeholder ? 'editor-placeholder' : 'hidden'}`}>
                         Escribe tu nota aquí...
                     </div>
-                    <div
+                    <ContentEditable
                         id='editor'
-                        ref={editorRef}
-                        contentEditable={true}
+                        innerRef={editorRef}
+                        html={state}
+                        onChange={handleContentChange}
+                        tagName='div'
                         aria-multiline
                         tabIndex={0}
                         role='textbox'
-                        dangerouslySetInnerHTML={{ __html: state }}
-                        onInput={handleContentChange}
                         spellCheck
                     />
                     <div id='styles'>

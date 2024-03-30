@@ -26,9 +26,9 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
   const timeOptions = {
     hour: 'numeric',
     minute: 'numeric'
-  }
+  };
 
-  const [date, setDate] = useState(new Date().toLocaleDateString('es-ES', dateOptions));
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [time, setTime] = useState(new Date().toLocaleTimeString('es-ES', timeOptions));
 
   const { getNotes, setReminder } = useNote();
@@ -76,7 +76,12 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
     };
   }, [formRef, noteRef, setAddReminder]);
 
-  if (!addReminder) return null;
+  useEffect(() => {
+    if (!addReminder) {
+      setSelectedDate(new Date());
+      setTime(new Date().toLocaleTimeString('es-ES', timeOptions));
+    }
+  }, [addReminder]);
 
   let addReminderPosition;
   if (formRef) {
@@ -98,12 +103,22 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
     return null;
   }
 
+  const toggleCalendar = () => {
+    setDatePicker(!datePicker);
+    if (!datePicker) {
+      setSelectedDate(new Date());
+      setTime(new Date().toLocaleTimeString('es-ES', timeOptions));
+    }
+  }
+
   const onSubmit = async (data) => {
     try {
-      const dateTime = data.date && data.time ? moment(`${data.date} ${data.time}`).format('YYYY-MM-DD HH:mm:ss') : null;
+      const dateTime = data.time ? moment(selectedDate).format('YYYY-MM-DD') + ' ' + data.time : null;
       if (dateTime) {
         await setReminder(boardId, { ...note, reminder: dateTime });
         getNotes(boardId);
+        setSelectedDate(new Date());
+        setTime(new Date().toLocaleTimeString('es-ES', timeOptions));
       }
       setAddReminder(false);
     } catch (error) {
@@ -125,9 +140,8 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
             <input
               type="text"
               id="date"
-              value={date}
-              {...register('date')}
-              onChange={(e) => setDate(e.target.value)}
+              value={selectedDate.toLocaleDateString('es-ES', dateOptions)}
+              readOnly
             />
             <div role='button' onClick={() => setDatePicker(!datePicker)}>
               <MdArrowDropDown />
@@ -149,7 +163,7 @@ export default function Reminder({ addReminder, setAddReminder, noteRef, formRef
         <div className='set-reminder-button'>
           <Button size='sm'>Agregar</Button>
         </div>
-        <Calendar className={`calendar ${datePicker ? 'visible' : 'invisible'}`} value={date} />
+        <Calendar value={selectedDate} onChange={(date) => setSelectedDate(date)} className={`calendar ${datePicker ? 'visible' : 'invisible'}`} />
       </form>
     </div>,
     document.body

@@ -10,6 +10,12 @@
     --hover-color: #b8ffb8;
 }
 
+#root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 body {
     background: linear-gradient(450deg, #202520, #404540);
     color: #eee;
