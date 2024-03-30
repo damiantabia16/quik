@@ -72,7 +72,12 @@ export const AuthProvider = ({ children }) => {
             }
         }
         checkLogin();
-    }, [])
+    }, []);
+
+    
+    useEffect(() => {
+        signIn({});
+    }, []);
 
     const exports = {
         user,
