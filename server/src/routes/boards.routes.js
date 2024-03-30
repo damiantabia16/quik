@@ -6,10 +6,10 @@ import { createBoardSchema } from "../schemas/board.schema.js";
 
 const router = Router();
 
-router.get('/tableros', authRequired, getBoards);
-router.get('/tableros/:id', authRequired, getBoard);
-router.post('/tableros', authRequired, validateSchema(createBoardSchema), createBoard);
-router.put('/tableros/:id', authRequired, updateBoard);
-router.delete('/tableros/:id', authRequired, deleteBoard);
+router.get('/tableros', getBoards);
+router.get('/tableros/:id', getBoard);
+router.post('/tableros', validateSchema(createBoardSchema), createBoard);
+router.put('/tableros/:id', updateBoard);
+router.delete('/tableros/:id', deleteBoard);
 
 export default router;
