@@ -1,11 +1,14 @@
 import axios from 'axios';
-import { API_URL } from '../config';
+import Cookies from 'js-cookie';
+
+const token = Cookies.get('authToken');
 
 const instance = axios.create({
     baseURL: "https://quik-server.vercel.app/api",
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
+        'Authorization': token ? `Bearer ${token}` : ''
     }
 });
 
