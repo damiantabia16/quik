@@ -12,15 +12,20 @@ const db = mysql.createPool({
 
 export const connection = () => {
     return new Promise((resolve, reject) => {
-        db.getConnection((error, connection) => {
-            if (error) {
-                console.error('Database connection error', error);
-                reject(error);
-            } else {
-                console.log('Database connection successful');
-                resolve(connection);
-            }
-        });
+        try {
+            db.getConnection((error, connection) => {
+                if (error) {
+                    console.error('Database connection error', error);
+                    reject(error);
+                } else {
+                    console.log('Database connection successful');
+                    resolve(connection);
+                }
+            });
+        } catch (error) {
+            console.error('Error connecting to database', error);
+            reject(error);
+        }
     });
 };
 
