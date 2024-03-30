@@ -7,7 +7,7 @@ config();
 async function main() {
     try {
         await connection();
-        app.listen(process.env.PORT, () => console.log('El servidor se encuentra activo en el puerto 4000'));
+        app.listen(process.env.PORT, () => console.log(`El servidor se encuentra activo en el puerto ${process.env.PORT}`));
     } catch (error) {
         console.error(error);
     }
