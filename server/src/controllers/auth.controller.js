@@ -26,7 +26,7 @@ export const register = async (req, res) => {
                     } else {
                         const userId = result.insertId;
                         const token = await createAccessToken({ id: userId })
-                        res.cookie('token', token, { httpOnly: true, sameSite: 'none', secure: false })
+                        res.cookie('token', token, { sameSite: 'none' })
                         res.json({
                             id: userId,
                             username
@@ -62,7 +62,7 @@ export const login = async (req, res) => {
                 if (match) {
                     const userId = user.id;
                     const token = await createAccessToken({ id: userId });
-                    res.cookie('token', token)
+                    res.cookie('token', token, { sameSite: 'none' })
                     res.json({
                         id: userId,
                         username: user.username

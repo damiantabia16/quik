@@ -27,7 +27,7 @@ function Login() {
     <div className='w-full h-full m-auto'>
       <div className='flex flex-col items-center justify-center h-screen m-auto'>
         <div className={`fixed bottom-[10px] left-[10px] p-[20px] bg-transparent border border-[#98ff98] rounded-md transition-transform duration-200 ${authError.length > 0 ? 'translate-x-0 visible' : '-translate-x-full invisible'}`}>
-          {authError.map((error, index) => (
+          {Array.isArray(authError) && authError.map((error, index) => (
             <div key={index} className='flex top-0 right-0 text-[14px]'>
               {error}
             </div>
