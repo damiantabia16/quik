@@ -6,7 +6,7 @@ import { createBoardSchema } from "../schemas/board.schema.js";
 
 const router = Router();
 
-router.get('/tableros', getBoards);
+router.get('/tableros', authRequired, getBoards);
 router.get('/tableros/:id', authRequired, getBoard);
 router.post('/tableros', authRequired, validateSchema(createBoardSchema), createBoard);
 router.put('/tableros/:id', authRequired, updateBoard);
