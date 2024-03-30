@@ -26,7 +26,7 @@ export const register = async (req, res) => {
                     } else {
                         const userId = result.insertId;
                         const token = await createAccessToken({ id: userId })
-                        res.cookie('token', token, { sameSite: 'none' })
+                        res.cookie('token', token, { sameSite: 'none', secure: true })
                         res.json({
                             id: userId,
                             username
