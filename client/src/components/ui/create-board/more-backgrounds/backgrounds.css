@@ -2,7 +2,7 @@
 
 #more-menu {
     position: fixed;
-    top: 455px;
+    top: 170px;
     right: 50px;
     left: 0;
     width: 300px;
@@ -94,7 +94,7 @@
 
 @media (min-width: 1024px) {
     #more-menu {
-        top: 250px;
+        top: 220px;
         right: 0;
         left: 600px;
     }
