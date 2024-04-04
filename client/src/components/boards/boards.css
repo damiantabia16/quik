@@ -165,6 +165,21 @@
     z-index: 1;
 }
 
+.board-options {
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+    width: 32px;
+    height: 32px;
+    z-index: 9999;
+}
+
+.board-options svg {
+    width: 20px;
+    height: 100%;
+    margin: auto;
+}
+
 .create-board-form-container {
     width: 320px;
     height: auto;
@@ -206,6 +221,7 @@
 }
 
 .form-container {
+    position: relative;
     padding: 0 20px 20px 20px;
 }
 
@@ -297,7 +313,7 @@
 }
 
 .more-background-images-colors button:hover {
-    background-color: #454d45;
+    background-color: #404540;
 }
 
 .background-example-container {

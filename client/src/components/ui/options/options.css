@@ -1,0 +1,29 @@
+@import '/src/index.css';
+
+.board-options-list {
+    color: var(--primary-color);
+    background-color: #eee;
+    border-radius: 4px;
+    padding: 6px 0;
+    user-select: none;
+}
+
+.board-option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 14px;
+    text-align: left;
+    padding: 5px 10px 5px 17px;
+    color: var(--primary-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    max-width: 100%;
+    transition: all 0.2s ease-in-out;
+}
+
+.board-option:hover {
+    background-color: rgba(0, 0, 0, .08);
+}

@@ -5,7 +5,6 @@ import cors from 'cors';
 import authRoutes from './routes/auth.routes.js';
 import boardsRoutes from './routes/boards.routes.js';
 import notesRoutes from './routes/notes.routes.js';
-import { FRONTEND_URL } from './config.js';
 
 const app = express();
 

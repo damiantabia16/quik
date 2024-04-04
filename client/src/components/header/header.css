@@ -78,12 +78,22 @@
     right: 20px;
     z-index: -1;
     user-select: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-options-list.active {
+    transform: translateY(0);
+}
+
+.user-options-list.unactive {
+    transform: translateY(-100%);
 }
 
 .user-option {
     display: flex;
     align-items: center;
     width: 100%;
+    font-size: 14px;
     text-align: left;
     padding: 5px 10px 5px 17px;
     white-space: nowrap;

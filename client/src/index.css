@@ -79,6 +79,26 @@ strong {
     background: rgba(32, 37, 32, 0.9);
 }
 
+.loader-container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 6px solid var(--secondary-color);
+    border-top: 6px solid transparent;
+    border-radius: 50%;
+    color: transparent;
+    animation: spin-anim 1.2s linear infinite;
+}
+
 .add-note-blur {
     background: rgba(32, 37, 32, 0.7);
 }
@@ -212,7 +232,8 @@ strong {
 
 
 #styles .styles-button:hover {
-    background-color: rgba(95, 99, 104, 0.3);;
+    background-color: rgba(95, 99, 104, 0.3);
+    ;
 }
 
 #styles .styles-button span {
@@ -354,5 +375,14 @@ strong {
 
     100% {
         opacity: 0;
+    }
+}
+
+@keyframes spin-anim {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }

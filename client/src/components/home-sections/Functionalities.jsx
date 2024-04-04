@@ -58,7 +58,7 @@ function Carousel() {
               <div className='card-description'>
                 <div style={{
                   backgroundColor: '#eee',
-                  backgroundImage: `url(${item.urlSmall})`,
+                  backgroundImage: `url(${item.urlSmall}`,
                   backgroundPosition: 'center center',
                   backgroundRepeat: 'no-repeat',
                   backgroundSize: 'contain' }}

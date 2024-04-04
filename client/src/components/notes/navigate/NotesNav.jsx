@@ -3,11 +3,11 @@ import { useBoard } from "../../../hooks/useBoard";
 import { useMenu } from "../../../hooks/useMenu";
 import { menuItems } from "./menuItems";
 import { Link, useLocation } from "react-router-dom";
-import CreateBoard from "../../boards/content/CreateBoard";
+import CreateBoard from "../../ui/create-board/CreateBoard";
 
 function NotesNav({ boardId }) {
 
-  const { boards, getBoards, toggleForm } = useBoard();
+  const { boards, getBoards, setIsMounted } = useBoard();
 
   const { menu, setMenu } = useMenu();
 
@@ -62,7 +62,7 @@ function NotesNav({ boardId }) {
                   <Link to='/tableros' className={`${menu ? 'block' : 'invisible hidden'}`}>
                     <p>Tableros</p>
                   </Link>
-                  <button onClick={toggleForm}>+</button>
+                  <button onClick={() => setIsMounted(true)}>+</button>
                 </div>
                 <div
                   onMouseEnter={() => { timeoutId = setTimeout(() => { setMenu(true) }, 300) }}

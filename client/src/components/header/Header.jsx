@@ -4,8 +4,8 @@ import { MdAccountCircle, MdKeyboardArrowDown } from "react-icons/md";
 import logo from './quik-logo.png';
 import { useAuth } from '../../hooks/useAuth';
 import './header.css';
-import OptionsMenu from '../OptionsMenu';
-import Logout from '../Logout';
+import OptionsMenu from '../ui/logout/OptionsMenu';
+import Logout from '../ui/logout/Logout';
 
 function Header() {
 

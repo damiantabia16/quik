@@ -5,8 +5,8 @@ import logo from './quik-logo.png';
 import { HiBars3 } from 'react-icons/hi2';
 import { MdAccountCircle, MdKeyboardArrowDown } from "react-icons/md";
 import { useMenu } from "../../hooks/useMenu";
-import OptionsMenu from "../OptionsMenu";
-import Logout from "../Logout";
+import OptionsMenu from "../ui/logout/OptionsMenu";
+import Logout from "../ui/logout/Logout";
 
 function HeaderV2() {
 

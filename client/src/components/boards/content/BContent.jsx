@@ -1,67 +1,99 @@
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useBoard } from '../../../hooks/useBoard';
-import { Link } from 'react-router-dom';
-import CreateBoard from './CreateBoard';
+import CreateBoard from '../../ui/create-board/CreateBoard';
+import BoardCard from '../../ui/board-card/BoardCard';
 
-function Searcher() {
+function Searcher({ searchTerm, setSearchTerm }) {
   return (
     <div className='searcher-container'>
       <div className='searcher'>
         <FaSearch />
-        <input id='board-searcher' name='board-searcher' type="text" placeholder='Buscar tableros' />
+        <input
+          id='board-searcher'
+          name='board-searcher'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          type="text"
+          placeholder='Buscar tableros' />
       </div>
     </div>
   )
 };
 
-function BoardsGrid() {
+function BoardsGrid({ searchTerm, handleDeleteBoard }) {
 
-  const { boards, getBoards, toggleForm } = useBoard();
+  const { boards, getBoards, setIsMounted } = useBoard();
+
+  const [boardOptions, setBoardOptions] = useState({});
+  const [filteredBoards, setFilteredBoards] = useState([]);
 
   useEffect(() => {
     getBoards();
   }, []);
 
+  useEffect(() => {
+    if (searchTerm && searchTerm.trim() !== '') {
+      setFilteredBoards(boards.filter(board => (
+        board.board_name.toLowerCase().includes(searchTerm.toLowerCase())
+      )));
+    } else {
+      setFilteredBoards(boards);
+    }
+  }, [searchTerm, boards]);
+
+  const handleOptions = (e, boardId) => {
+    e.stopPropagation();
+    setBoardOptions(prevState => ({
+      ...prevState,
+      [boardId]: !prevState[boardId]
+    }));
+  };
+
   return (
-    <div className='boards'>
-      <ul>
-        <li className='board-container'>
-          <div onClick={toggleForm} className='board create-board'>
-            <p>Crear un tablero</p>
-          </div>
-        </li>
-        {boards.map((board) => (
-          <li key={board.id} className='board-container'>
-            <Link to={`/tableros/${board.id}/notas`}>
-              <div className='board board-item'
-                style={{
-                  backgroundImage: board.background_type === 'image'
-                    ? `url(${board.background_value})`
-                    : 'none',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundColor: board.background_type === 'color'
-                    ? board.background_value
-                    : 'transparent'
-                }}>
-                <span id='hover' />
-                <p>{board.board_name}</p>
-              </div>
-            </Link>
+    <>
+      <div className='boards'>
+        <ul>
+          <li className='board-container'>
+            <div onClick={() => setIsMounted(true)} className='board create-board'>
+              <p>Crear un tablero</p>
+            </div>
           </li>
-        ))}
-      </ul>
-    </div>
+          {filteredBoards.map((board) => (
+            <BoardCard
+              board={board}
+              key={board.id}
+              boardOptions={boardOptions[board.id] || false}
+              setBoardOptions={(value) => setBoardOptions({ ...boardOptions, [board.id]: value })}
+              handleOptions={handleOptions}
+              handleDeleteBoard={handleDeleteBoard} />
+          ))}
+        </ul>
+      </div>
+    </>
   )
 }
 
 function BContent() {
+
+  const { getBoards, deleteBoard } = useBoard();
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleDeleteBoard = async (boardId) => {
+    try {
+      await deleteBoard(boardId);
+      getBoards();
+    } catch (error) {
+      console.error('Error al eliminar definitivamente el tablero:', error);
+    }
+  }
+
   return (
     <>
       <section id="boards">
-        <Searcher />
-        <BoardsGrid />
+        <Searcher searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <BoardsGrid searchTerm={searchTerm} handleDeleteBoard={handleDeleteBoard} />
       </section>
       <CreateBoard />
     </>

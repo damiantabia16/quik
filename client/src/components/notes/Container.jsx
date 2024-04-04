@@ -4,11 +4,9 @@ import { useBoard } from "../../hooks/useBoard";
 import { useNote } from "../../hooks/useNote";
 import NotesNav from "./navigate/NotesNav";
 import Notes from "./content/grid/Notes";
-import CreateNote from "./content/ui-elements/create-note/CreateNote";
-import Message from "./content/ui-elements/popup-message/Message";
-import Reminder from "./content/ui-elements/reminder/Reminder";
-import ColorPicker from "./content/ui-elements/color-picker/ColorPicker";
-import ConfirmDelete from "./content/ui-elements/confirm-delete/ConfirmDelete";
+import CreateNote from "../ui/create-note/CreateNote";
+import Message from "../ui/popup-message/Message";
+import ConfirmDelete from "../ui/confirm-delete/ConfirmDelete";
 import { options } from "./content/options";
 import { Tooltip } from 'react-tooltip';
 import { MdClose } from "react-icons/md";
@@ -26,6 +24,8 @@ function Grid({
     setPlaceholder,
     selectedColor,
     setSelectedColor,
+    noteReminder,
+    setNoteReminder,
     isArchived,
     setIsArchived,
     selectedNotes,
@@ -66,9 +66,12 @@ function Grid({
                 setPlaceholder={setPlaceholder}
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
+                noteReminder={noteReminder}
+                setNoteReminder={setNoteReminder}
                 isArchived={isArchived}
                 setIsArchived={setIsArchived}
-                resetValues={resetValues} />}
+                resetValues={resetValues}
+                setMessage={setMessage} />}
             {isInNotes && <div role="button" onClick={toggleCreateNote} className={`add-note-button ${isMounted ? 'active' : ''}`}>+</div>}
         </>
     )
@@ -82,7 +85,7 @@ function Container() {
 
     const params = useParams();
 
-    const { notes, getNote, getNotes, updateNote, archiveNote, unarchiveNote, sendNoteToBin, deleteNote, restoreNote } = useNote();
+    const { notes, getNotes, archiveNote, unarchiveNote, sendNoteToBin, deleteNote, restoreNote } = useNote();
 
     const selector = useRef();
 
@@ -94,9 +97,9 @@ function Container() {
     const [createNoteForm, setCreateNoteForm] = useState(false);
     const [placeholder, setPlaceholder] = useState(true);
     const [selectedColor, setSelectedColor] = useState('#eee');
+    const [noteReminder, setNoteReminder] = useState(null);
     const [isArchived, setIsArchived] = useState(false);
     const [message, setMessage] = useState('');
-    const [undoPerformed, setUndoPerformed] = useState(false);
     const [selectedNotes, setSelectedNotes] = useState([]);
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [allSelected, setAllSelected] = useState(false);
@@ -126,13 +129,14 @@ function Container() {
         setIsMounted(false);
         setPlaceholder(true);
         setSelectedColor('#eee');
+        setNoteReminder(null);
     };
 
     const toggleCreateNote = () => {
         setIsMounted(true);
         if (isMounted) {
             resetValues();
-        }
+        };
     };
 
     const handleSelectAll = () => {
@@ -145,7 +149,7 @@ function Container() {
             notesToSelect = notes.filter(note => note.is_archived && !note.in_bin);
         } else if (pathname.includes('/papelera')) {
             notesToSelect = notes.filter(note => note.in_bin);
-        }
+        };
         setSelectedNotes(notesToSelect.map(note => note.id));
         setAllSelected(true);
     };
@@ -156,7 +160,7 @@ function Container() {
             getNotes(boardId);
         } catch (error) {
             console.error('Error al archivar la nota:', error);
-        }
+        };
     };
 
     const handleUnarchiveNote = async (noteId) => {
@@ -165,7 +169,7 @@ function Container() {
             getNotes(boardId);
         } catch (error) {
             console.error('Error al archivar la nota:', error);
-        }
+        };
     };
 
     const handleSendNoteToBin = async (noteId) => {
@@ -174,7 +178,7 @@ function Container() {
             getNotes(boardId);
         } catch (error) {
             console.error('Error al archivar la nota:', error);
-        }
+        };
     };
 
     const handleDeleteNote = async (noteId) => {
@@ -183,7 +187,7 @@ function Container() {
             getNotes(boardId);
         } catch (error) {
             console.error('Error al eliminar definitivamente la nota:', error);
-        }
+        };
     };
 
     const handleRestoreNote = async (noteId) => {
@@ -192,7 +196,7 @@ function Container() {
             getNotes(boardId);
         } catch (error) {
             console.error('Error al restaurar la nota:', error);
-        }
+        };
     };
 
     const handleConfirmDelete = () => {
@@ -201,9 +205,7 @@ function Container() {
             setMessage('');
         }, 7000);
         selectedNotes.forEach(noteId => {
-            setTimeout(() => {
-                handleDeleteNote(noteId);
-            }, 200);
+            handleDeleteNote(noteId);
         });
         setSelectedNotes([]);
         setAllSelected(false);
@@ -211,8 +213,8 @@ function Container() {
     };
 
     const handleCancelDelete = () => {
-        setConfirmDelete(false)
-    }
+        setConfirmDelete(false);
+    };
 
     const handleButtons = (optionId) => {
         {
@@ -222,9 +224,7 @@ function Container() {
                     setTimeout(() => {
                         setMessage('');
                     }, 7000);
-                    setTimeout(() => {
-                        handleArchiveNote(noteId);
-                    }, 200);
+                    handleArchiveNote(noteId);
                     setSelectedNotes([]);
                     setAllSelected(false);
                 } else if (optionId === 4) {
@@ -232,9 +232,7 @@ function Container() {
                     setTimeout(() => {
                         setMessage('');
                     }, 7000);
-                    setTimeout(() => {
-                        handleUnarchiveNote(noteId);
-                    }, 200);
+                    handleUnarchiveNote(noteId);
                     setSelectedNotes([]);
                     setAllSelected(false);
                 } else if (optionId === 7) {
@@ -242,9 +240,7 @@ function Container() {
                     setTimeout(() => {
                         setMessage('');
                     }, 7000);
-                    setTimeout(() => {
-                        handleSendNoteToBin(noteId);
-                    }, 200);
+                    handleSendNoteToBin(noteId);
                     setSelectedNotes([]);
                     setAllSelected(false);
                 } else if (optionId === 8) {
@@ -254,15 +250,13 @@ function Container() {
                     setTimeout(() => {
                         setMessage('');
                     }, 7000);
-                    setTimeout(() => {
-                        handleRestoreNote(noteId);
-                    }, 200);
+                    handleRestoreNote(noteId);
                     setSelectedNotes([]);
                     setAllSelected(false);
-                }
-            })
-        }
-    }
+                };
+            });
+        };
+    };
 
     return (
         <div className="notes-container">
@@ -366,6 +360,8 @@ function Container() {
                 setPlaceholder={setPlaceholder}
                 selectedColor={selectedColor}
                 setSelectedColor={setSelectedColor}
+                noteReminder={noteReminder}
+                setNoteReminder={setNoteReminder}
                 selectedNotes={selectedNotes}
                 setSelectedNotes={setSelectedNotes}
                 handleSelectAll={handleSelectAll}
@@ -376,7 +372,7 @@ function Container() {
                 message={message}
                 setMessage={setMessage}
                 pathname={pathname} />
-            <Message message={message} setMessage={setMessage} undoPerformed={undoPerformed} />
+            <Message message={message} setMessage={setMessage} />
         </div>
     )
 }

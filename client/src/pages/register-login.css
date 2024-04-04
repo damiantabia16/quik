@@ -1,0 +1,98 @@
+@import '/src/index.css';
+
+.register-login-box-container {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+}
+
+.register-login-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: auto;
+}
+
+.auth-error {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    padding: 20px;
+    background-color: transparent;
+    border: 1px solid var(--secondary-color);
+    border-radius: 6px;
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.2s ease-in-out;
+}
+
+.auth-error.slide-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.auth-error-message {
+    font-size: 14px;
+}
+
+.register-login-form {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    height: auto;
+    padding: 20px;
+    border: 1px solid #707570;
+    border-radius: 6px;
+}
+
+.register-login-title {
+    margin-block: 15px;
+}
+
+.register-login-title h1 {
+    font-size: 2.25rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.register-login-input {
+    margin-block: 15px;
+}
+
+.register-login-input-label {
+    margin-block: 3px;
+}
+
+.register-login-input input {
+    width: 100%;
+    font-size: 14px;
+    padding: 4px 5px;
+    border-radius: 4px;
+    background-color: var(--primary-color);
+    outline: none;
+}
+
+.register-login-error {
+    font-size: 13px;
+    color: #ff3333;
+    margin-block: 3px;
+}
+
+.go-to-login span {
+    font-size: 14px;
+}
+
+.go-to-login span a {
+    color: var(--secondary-color);
+}
+
+.go-to-login span a:hover {
+    text-decoration-line: underline;
+}
+
+.register-login-submit-button {
+    margin-block: 20px;
+}
+

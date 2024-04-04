@@ -7,7 +7,9 @@ function ProtectedRoute() {
 
   if (loading) {
     return (
-      <h1>Cargando...</h1>
+      <div className="loader-container">
+        <div className="spinner">Cargando...</div>
+      </div>
     )
   }
 

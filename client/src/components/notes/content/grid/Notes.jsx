@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
-import '../custom-toolbar.css';
 import { useNote } from '../../../../hooks/useNote';
 import Masonry from 'react-masonry-css';
 import { MdAddAlarm, MdDelete } from "react-icons/md";
 import { RiArchive2Fill } from "react-icons/ri";
-import Note from '../ui-elements/popup-note/Note';
-import NoteCard from '../ui-elements/note-card/NoteCard';
+import Note from '../../../ui/popup-note/Note';
+import NoteCard from '../../../ui/note-card/NoteCard';
 import { useLocation } from 'react-router-dom';
 
 function Searcher({ boardName, searchTerm, setSearchTerm }) {
@@ -47,9 +46,8 @@ function Searcher({ boardName, searchTerm, setSearchTerm }) {
 
 function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelectedNotes, handleSelectAll, allSelected, handleArchiveNote, handleUnarchiveNote, handleSendNoteToBin, handleDeleteNote, handleRestoreNote, setMessage, searchTerm, setSearchTerm }) {
 
-  const { notes, setNotes, getNotes } = useNote();
+  const { notes, getNotes } = useNote();
 
-  const [draggedNote, setDraggedNote] = useState(null);
   const [filteredNotes, setFilteredNotes] = useState([]);
   const [initialMessage, setInitialMessage] = useState('');
   const [icon, setIcon] = useState(null);
@@ -75,21 +73,21 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
           !note.is_archived &&
           !note.in_bin &&
           (note.note_title && note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+            note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       } else if (pathname.includes('/recordatorios')) {
         filtered = notes.filter(note =>
           note.reminder &&
           !note.in_bin &&
           (note.note_title && note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+            note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       } else if (pathname.includes('/archivos')) {
         filtered = notes.filter(note =>
           note.is_archived &&
           !note.in_bin &&
           (note.note_title && note.note_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
+            note.note_content && note.note_content.toLowerCase().includes(searchTerm.toLowerCase()))
         );
       }
     } else {
@@ -127,21 +125,6 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
     setNoResultMessage(noResultMessage);
   }, [notes, pathname, searchTerm]);
 
-  const handleDragStart = (note) => {
-    setDraggedNote(note)
-  };
-
-  const handleDrop = (targetNote, draggedNote) => {
-    const targetIndex = notes.findIndex(n => n.id === targetNote.id);
-    const draggedIndex = notes.findIndex(n => n.id === draggedNote.id);
-
-    const updatedNotes = [...notes];
-
-    [updatedNotes[targetIndex], updatedNotes[draggedIndex]] = [draggedNote, targetNote];
-
-    setNotes(updatedNotes);
-  };
-
   const breakpoints = {
     default: 7,
     1700: 6,
@@ -162,10 +145,6 @@ function NotesGrid({ boardId, editNote, editNoteForm, selectedNotes, setSelected
               id={note.id}
               note={note}
               boardId={boardId}
-              onDragStart={handleDragStart}
-              onDrop={handleDrop}
-              draggedNote={draggedNote}
-              setDraggedNote={setDraggedNote}
               editNote={editNote}
               editNoteForm={editNoteForm}
               selectedNotes={selectedNotes}

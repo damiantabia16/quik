@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import { createBoardRequest, getBoardsRequest, getBoardRequest } from "../api/boards";
+import { createBoardRequest, getBoardsRequest, getBoardRequest, updateBoardRequest, deleteBoardRequest } from "../api/boards";
 
 export const BoardContext = createContext();
 
@@ -13,6 +13,7 @@ export const BoardProvider = ({ children }) => {
     const [ backgroundImageIndex, setBackgroundImageIndex ] = useState(0);
     const [ backgroundColorIndex, setBackgroundColorIndex ] = useState(null);
     const [ selectedBackground, setSelectedBackground ] = useState(null);
+    const [ moreBackgrounds, setMoreBackgrounds ] = useState(false);
 
     const createBoard = async (board) => {
         const res = await createBoardRequest(board);
@@ -30,15 +31,30 @@ export const BoardProvider = ({ children }) => {
     const getBoard = async (id) => {
         try {
             const res = await getBoardRequest(id);
+            setBoard(res.data);
             return res.data;
         } catch (error) {
             console.error(error)
         }
     };
 
-    const toggleForm = () => {
-        setIsMounted(!isMounted);
+    const updateBoard = async (board) => {
+        try {
+            const res = await updateBoardRequest(board);
+            setBoard(res.data);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+    const deleteBoard = async (id) => {
+        try {
+            const res = await deleteBoardRequest(id);
+            return res.data;
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const cancelForm = () => {
         setSelectedBackground(backgroundImages.length > 0 ? backgroundImages[0] : null);
@@ -68,11 +84,12 @@ export const BoardProvider = ({ children }) => {
         createBoard,
         getBoards,
         getBoard,
+        updateBoard,
+        deleteBoard,
         isMounted,
         setIsMounted,
         form,
         setForm,
-        toggleForm,
         cancelForm,
         handleBackground,
         backgroundImages,
@@ -83,6 +100,8 @@ export const BoardProvider = ({ children }) => {
         setBackgroundColorIndex,
         selectedBackground,
         setSelectedBackground,
+        moreBackgrounds,
+        setMoreBackgrounds
     };
 
     return(

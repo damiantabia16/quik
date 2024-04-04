@@ -1,0 +1,33 @@
+@import '/src/index.css';
+
+.edit-board-name {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.edit-board-name label {
+    padding-bottom: 5px;
+    font-size: 14px;
+}
+
+.edit-board-name #edit_board_name {
+    width: 100%;
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 4px 5px;
+    margin-top: 4px;
+    background-color: #404540;
+    outline: none;
+}
+
+.submit-change {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 10px;
+    width: 100%;
+    padding-top: 20px;
+}

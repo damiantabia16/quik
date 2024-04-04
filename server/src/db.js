@@ -15,15 +15,15 @@ export const connection = () => {
         try {
             db.getConnection((error, connection) => {
                 if (error) {
-                    console.error('Database connection error', error);
+                    console.error('Conexión a la base de datos fallida', error);
                     reject(error);
                 } else {
-                    console.log('Database connection successful');
+                    console.log('Conexión a la base de datos exitosa');
                     resolve(connection);
                 }
             });
         } catch (error) {
-            console.error('Error connecting to database', error);
+            console.error('No se ha podido conectar a la base de datos', error);
             reject(error);
         }
     });

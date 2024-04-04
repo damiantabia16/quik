@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth"
-import quik from './quik-hero.png';
+import { Button } from "../ui/button/Button";
+import quik from '/img/quik-hero.webp';
 
 function Hero() {
 
@@ -16,11 +17,11 @@ function Hero() {
                         <div>
                             {isAuth ? (
                                 <Link to='/tableros'>
-                                    <button type="button" className="w-full lg:w-auto lg:px-[60px] bg-[#98ff98] text-[#202520] rounded font-medium text-[18px] py-[14px] transition duration-150 hover:bg-[#b8ffb8]">Ir a tus tableros</button>
+                                    <Button className="register-login-button">Ir a tus tableros</Button>
                                 </Link>
                             ) : (
                                 <Link to='/registrarse'>
-                                    <button type="button" className="w-full lg:w-auto lg:px-[60px] bg-[#98ff98] text-[#202520] rounded font-medium text-[18px] py-[14px] transition duration-150 hover:bg-[#b8ffb8]">Crea una cuenta, ¡y organizate!</button>
+                                    <Button className="register-login-button">Crea una cuenta, ¡y organizate!</Button>
                                 </Link>
                             )}
                         </div>

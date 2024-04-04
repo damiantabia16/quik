@@ -8,6 +8,7 @@ const buttonVariants = cva(
             variant: {
                 default: 'primary',
                 outline: 'secondary',
+                danger: 'danger',
                 transparent: 'transparent'
             },
             size: {

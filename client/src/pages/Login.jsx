@@ -3,6 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../components/header/Header';
+import { Button } from '../components/ui/button/Button';
+import './register-login.css';
 
 function Login() {
 
@@ -23,55 +25,62 @@ function Login() {
 
   return (
     <>
-    <Header />
-    <div className='w-full h-full m-auto'>
-      <div className='flex flex-col items-center justify-center h-screen m-auto'>
-        <div className={`fixed bottom-[10px] left-[10px] p-[20px] bg-transparent border border-[#98ff98] rounded-md transition-transform duration-200 ${authError.length > 0 ? 'translate-x-0 visible' : '-translate-x-full invisible'}`}>
-          {Array.isArray(authError) && authError.map((error, index) => (
-            <div key={index} className='flex top-0 right-0 text-[14px]'>
-              {error}
+      <Header />
+      <div className='register-login-box-container'>
+        <div className='register-login-box'>
+          <div className={`auth-error ${authError.length > 0 ? 'slide-in' : ''}`}>
+            {Array.isArray(authError) && authError.map((error, index) => (
+              <div key={index} className='auth-error-message'>
+                {error}
+              </div>
+            ))}
+          </div>
+          <form
+            className='register-login-form'
+            onSubmit={handleSubmit(onSubmit)}>
+            <div className='register-login-title'>
+              <h1>Inicia sesión</h1>
             </div>
-          ))}
+            <div className='register-login-input'>
+              <div className='my-[3px]'>
+                <label htmlFor="username">Nombre de usuario:</label>
+              </div>
+              <input
+                id='username'
+                type="text"
+                autoComplete='off'
+                {...register('username', { required: true })} />
+              {errors.username && (
+                <p className='register-login-error'>
+                  El nombre de usuario es requerido
+                </p>
+              )}
+            </div>
+            <div className='register-login-input'>
+              <div className='register-login-input-label'>
+                <label htmlFor="password">Contraseña:</label>
+              </div>
+              <input
+                id='password'
+                type="password"
+                autoComplete='off'
+                {...register('password', { required: true })} />
+              {errors.password && (
+                <p className='register-login-error'>
+                  La contraseña es requerida
+                </p>
+              )}
+            </div>
+            <div className='go-to-login'>
+              <span>
+                ¿No tienes una cuenta?{' '}
+                <Link to='/registrarse'>Crea una</Link>
+              </span>
+            </div>
+            <Button className='register-login-submit-button'>INGRESAR</Button>
+          </form>
         </div>
-        <form
-          className='flex flex-col p-[20px] rounded-md border border-[#c0c0c0] w-[350px] h-auto'
-          onSubmit={handleSubmit(onSubmit)}>
-          <div className='my-[15px]'>
-            <h1 className='text-4xl font-bold text-center'>Inicia sesión</h1>
-          </div>
-          <div className='my-[15px]'>
-            <div className='my-[3px]'>
-              <label htmlFor="username">Nombre de usuario:</label>
-            </div>
-            <input id='username' className='w-full rounded outline-none px-[5px] py-[4px] bg-[#202520] text-[14px]' type="text" autoComplete='off' {...register('username', { required: true })} />
-            {errors.username && (
-              <p className='text-[13px] text-[#ff3333] my-[3px]'>
-                El nombre de usuario es requerido
-              </p>
-            )}
-          </div>
-          <div className='my-[15px]'>
-            <div className='my-[3px]'>
-              <label htmlFor="password">Contraseña:</label>
-            </div>
-            <input id='password' className='w-full rounded outline-none px-[5px] py-[4px] bg-[#202520] text-[14px]' type="password" {...register('password', { required: true })} />
-            {errors.password && (
-              <p className='text-[13px] text-[#ff3333] my-[3px]'>
-                La contraseña es requerida
-              </p>
-            )}
-          </div>
-          <div>
-            <span className='text-[14px]'>
-              ¿No tienes una cuenta? <Link to='/registrarse' className='text-[#98ff98] underline'>Crea una</Link>
-            </span>
-          </div>
-          <div className='flex items-center justify-center my-auto py-[20px]'>
-            <button type='submit' className='bg-[#98ff98] text-[#202520] rounded px-[10px] py-[6px] w-full font-medium outline-none transition duration-150 hover:bg-[#b8ffb8]'>INGRESAR</button>
-          </div>
-        </form>
       </div>
-    </div>
     </>
   )
 };

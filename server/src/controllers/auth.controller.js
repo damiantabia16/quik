@@ -1,6 +1,6 @@
 import db from "../db.js";
 import bcrypt from 'bcryptjs';
-import { createAccessToken, createRefreshToken } from "../libs/jwt.js";
+import { createAccessToken } from "../libs/jwt.js";
 import jwt from "jsonwebtoken";
 import { TOKEN_SECRET } from "../config.js";
 
@@ -26,9 +26,7 @@ export const register = async (req, res) => {
                     } else {
                         const userId = result.insertId;
                         const token = await createAccessToken({ id: userId });
-                        const refreshToken = await createRefreshToken({ id: userId });
                         res.cookie('token', token, { sameSite: 'none', secure: true });
-                        res.cookie('refreshToken', refreshToken, { sameSite: 'none', secure: true });
                         res.json({
                             id: userId,
                             username
@@ -64,9 +62,7 @@ export const login = async (req, res) => {
                 if (match) {
                     const userId = user.id;
                     const token = await createAccessToken({ id: userId });
-                    const refreshToken = await createRefreshToken({ id: userId });
                     res.cookie('token', token, { sameSite: 'none', secure: true });
-                    res.cookie('refreshToken', refreshToken, { sameSite: 'none', secure: true });
                     res.json({
                         id: userId,
                         username: user.username
@@ -157,25 +153,4 @@ export const verifyToken = async (req, res) => {
             res.status(500).json({ message: 'Unexpected error' });
         }
     });
-};
-
-export const refreshAccessToken = async (req, res) => {
-    const { refreshToken } = req.cookies;
-
-    if (!refreshToken) {
-        return res.status(401).json({ message: 'Refresh token is required' });
-    }
-
-    try {
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-            if (err) {
-                return res.status(403).json({ message: 'Invalid refresh token' });
-            }
-            const accessToken = createAccessToken({ id: user.id });
-            res.json({ accessToken });
-        });
-    } catch (error) {
-        console.error('Error refreshing access token:', error);
-        res.status(500).json({ message: 'Error refreshing access token' });
-    }
 };

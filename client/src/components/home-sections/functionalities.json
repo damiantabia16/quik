@@ -28,15 +28,6 @@
     },
     {
         "id": 4,
-        "title": "Un error lo comete cualquiera.",
-        "function": "¿Añadiste una nota en un tablero que no querías? No hay problema, puedes arrastrarla e insertarla en el tablero al que debía pertenecer en un principio.",
-        "color": "#ffc400",
-        "alt": "Quik - Drag Note",
-        "url": "https://i.ibb.co/S6015P5/quik-functionalities4.png",
-        "urlSmall": "https://i.ibb.co/ZKrmn2v/functionalities4.png"
-    },
-    {
-        "id": 5,
         "title": "¿¡Batman!?",
         "function": "¿Quieres mantener oculta la identidad de tu nota? Presiona sobre el ícono de la caja de archivos al crear o editar tu nota y verás cómo desaparece en las sombras. Será visible unicamente en la sección de Archivos.",
         "color": "#202520",
@@ -45,7 +36,7 @@
         "urlSmall": "https://i.ibb.co/8dKz4vZ/functionalities5.png"
     },
     {
-        "id": 6,
+        "id": 5,
         "title": "Gracias por todo.",
         "function": "Puedes borrar tu nota luego de que ya no te sea más útil y enviarla a la papelera. Tranquilo, si la haz eliminado sin querer está se mantendrá en la sección de Papelera durante 7 días, ¡todo tiene solución en Quik!",
         "color": "#ff7452",

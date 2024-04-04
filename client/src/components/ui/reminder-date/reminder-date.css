@@ -1,0 +1,48 @@
+@import '/src/index.css';
+
+.note-reminder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    color: #404540;
+    padding: 12px 16px 6px 16px;
+}
+
+.create-note-reminder {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    color: #404540;
+    padding: 10px 20px;
+}
+
+.note-reminder .watch, .create-note-reminder .watch {
+    margin-right: 5px;
+}
+
+.note-reminder span, .create-note-reminder span {
+    font-size: .7rem;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.delete-reminder {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    right: 0;
+    border-radius: 9999px;
+    transition: all 0.2s ease-in-out;
+}
+
+.delete-reminder svg {
+    height: 100%;
+    font-size: .875rem;
+    margin: auto;
+}
+
+.delete-reminder.option-hover:hover {
+    background-color: rgba(95, 99, 104, 0.3);
+}
